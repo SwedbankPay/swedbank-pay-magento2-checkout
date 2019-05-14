@@ -8,7 +8,7 @@ php:
 - hhvm
 
 env:
-- ARCHIVE=$PROJECT-TRAVIS_TAG.zip
+- ARCHIVE=$TRAVIS_REPO_SLUG-$TRAVIS_TAG.zip
 
 matrix:
   fast_finish: true
