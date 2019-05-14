@@ -19,7 +19,7 @@ matrix:
   - php: hhvm
 
 before_install:
- - git fetch --unshallow # Travis always does a shallow clone, but GitVersion needs the full history including branches and tags
+ - git fetch --unshallow || true # Travis always does a shallow clone, but GitVersion needs the full history including branches and tags
 
 install:
 - wget https://raw.githubusercontent.com/magento/marketplace-tools/master/validate_m2_package.php
