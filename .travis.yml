@@ -19,10 +19,10 @@ matrix:
   - php: hhvm
 
 before_install:
-- git fetch --unshallow || true # Travis always does a shallow clone, but GitVersion needs the full history including branches and tags
+- git fetch --unshallow || true # Travis might do a shallow clone, but GitVersion needs the full history including branches and tags
 - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 - git fetch origin
-- git branch master origin/master
+- git branch master origin/master # GitVersion seems to require a local "master" branch these days. That's a bug, but oh well.
 - git log --graph --format="%h %cr %d" --decorate --date=relative --all --remotes="*" -n 100
 
 install:
