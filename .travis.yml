@@ -8,7 +8,7 @@ php:
 - hhvm
 
 env:
-- ARCHIVE=$TRAVIS_REPO_SLUG-$TRAVIS_TAG.zip
+- ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}.zip
 
 matrix:
   fast_finish: true
