@@ -23,8 +23,8 @@ install:
 - docker pull $GITVERSION
 
 before_script:
-- docker run --rm -v "$(pwd):/repo" $GITVERSION /repo -output json
-- export SEMVER=$(docker run --rm -v "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
+- docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json
+- export SEMVER=$(docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
 - export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${SEMVER}.zip
 - echo $ARCHIVE
 - zip -r $ARCHIVE *
