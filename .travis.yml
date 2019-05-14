@@ -7,9 +7,6 @@ php:
 - '7.1'
 - hhvm
 
-env:
-- ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}.zip
-
 matrix:
   fast_finish: true
   allow_failures:
@@ -19,6 +16,7 @@ install:
 - wget https://raw.githubusercontent.com/magento/marketplace-tools/master/validate_m2_package.php
 
 before_script:
+- export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}.zip
 - echo $ARCHIVE
 - zip -r $ARCHIVE *
 
