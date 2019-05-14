@@ -1,11 +1,17 @@
 language: php
 sudo: false
 
+services:
+  - docker
+
 php:
 - '5.6'
 - '7.0'
 - '7.1'
 - hhvm
+
+env:
+- GITVERSION="gittools/gitversion:5.0.0-linux-debian-9-netcoreapp2.2"
 
 matrix:
   fast_finish: true
@@ -14,9 +20,11 @@ matrix:
 
 install:
 - wget https://raw.githubusercontent.com/magento/marketplace-tools/master/validate_m2_package.php
+- docker pull $GITVERSION
 
 before_script:
-- export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}.zip
+- docker run --rm -v "$(pwd):/repo" $GITVERSION /repo /output BuildServer
+- export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${GitVersion_FullSemVer}.zip
 - echo $ARCHIVE
 - zip -r $ARCHIVE *
 
