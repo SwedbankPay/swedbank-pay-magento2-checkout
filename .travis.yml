@@ -14,6 +14,7 @@ before_install:
 - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 - git fetch origin
 - git branch master origin/master || true # GitVersion seems to require a local "master" branch these days. That's a bug, but oh well.
+- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then git checkout -b "$TRAVIS_PULL_REQUEST_BRANCH-pr"; fi # Create an explicit branch on pull requests as I'm unable to pass Git_Branch into the Docker container for some
 - git log --graph --format="%h %cr %d" --decorate --date=relative --all --remotes="*" -n 100
 
 install:
