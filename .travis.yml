@@ -18,8 +18,11 @@ matrix:
 install:
 - wget https://raw.githubusercontent.com/magento/marketplace-tools/master/validate_m2_package.php
 
-script:
+before_script:
+- echo $ARCHIVE
 - zip -r $ARCHIVE *
+
+script:
 - php validate_m2_package.php -d $ARCHIVE
 
 deploy:
