@@ -1,7 +1,9 @@
 # PayEx Checkout for Magento 2
 
-PayEx Checkout for Magento 2 is a complete re-imagination of the Magento checkout experience, integrating seamlessly into
-the Magento installation through highly customizable and flexible components.
+The Official PayEx Checkout Extension for Magento 2 provides seamless
+integration with PayEx Checkout, allowing your customers to pay swiftly
+and securely with credit card, invoice (Norway and Sweden), Vipps (Norway)
+and Swish (Sweden). Credit card payments are available world-wide.
 
 ## Requirements
 
