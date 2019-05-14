@@ -23,13 +23,13 @@ before_install:
 - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 - git fetch origin
 - git branch master origin/master
+- git log --graph --format="%h %cr %d" --decorate --date=relative --all --remotes="*" -n 100
 
 install:
 - wget https://raw.githubusercontent.com/magento/marketplace-tools/master/validate_m2_package.php
 - docker pull $GITVERSION
 
 before_script:
-- git log --graph --format="%h %cr %d" --decorate --date=relative --all --remotes="*" -n 100
 - docker run --rm -v "$(pwd):/repo" $GITVERSION /repo -output BuildServer
 - export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${GitVersion_FullSemVer}.zip
 - echo $ARCHIVE
