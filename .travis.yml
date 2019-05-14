@@ -1,0 +1,42 @@
+language: php
+sudo: false
+
+services:
+  - docker
+
+php:
+- '5.6'
+- '7.0'
+- '7.1'
+
+before_install:
+- git fetch --unshallow || true # Travis might do a shallow clone, but GitVersion needs the full history including branches and tags
+- git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+- git fetch origin
+- git branch master origin/master || true # GitVersion seems to require a local "master" branch these days. That's a bug, but oh well.
+- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then git checkout -b "$TRAVIS_PULL_REQUEST_BRANCH-pr"; fi # Create an explicit branch on pull requests as I'm unable to pass Git_Branch into the Docker container for some
+- git log --graph --format="%h %cr %d" --decorate --date=relative --all --remotes="*" -n 100
+
+install:
+- wget https://raw.githubusercontent.com/magento/marketplace-tools/master/validate_m2_package.php
+- export GITVERSION="gittools/gitversion:5.0.0-linux-debian-9-netcoreapp2.2"
+- docker pull $GITVERSION
+
+before_script:
+- docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json
+- export SEMVER=$(docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
+- export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${SEMVER}.zip
+- echo $ARCHIVE
+- zip -r $ARCHIVE *
+
+script:
+- php validate_m2_package.php -d $ARCHIVE
+
+deploy:
+  provider: releases
+  api_key:
+    secure: T31P9eRFFU1fH1dGyqd2gOvvW6Ln3+eepe1hPjGaig+YLkiQxY20DYowyiiMkl12HnMFdqby3EjZ4QjJ3N62Ym9m19tdnuniVLEUFF+lHhrThPRX6wtecNFkgSWLD6V4gptkBuoXWcKW67qzcISFgHt/RA799Ic9BFNXCjyZcuziFSRVHtrs2MUaf8mRzseynZgrRFnzMJjXqeiFbg6Dexh4Fqb9p15UouGbFk7c8dnwo7ruc68jmCnZ71Dz+YxDiMYpCbCwZJx5eTl4RlO39Bj9hlVh+UlMiHazRK3uQquWEzbqxhlPA6JLF2hHmiiMrOiVdMZ9bQ4f9PDO7HcWi0Op6kleaBJ6yX7GPItSPn3jXpeqs4AKjlRtxP1pCVHZ/w9GPYjbJ/Hp2wx2logHjrqSmoh0ZAJlS0RBPb/ojQa/uu1J2hj4ycQP3BnxtTiJyPvfiG6l6fx4t0jE26ubQ2yiBbg9lSxogqBkF12M5n579gXHUUaeX5t6uYFnivC5ay1P0v37YiT/E9G/gT/k4GLG4o655Tggq6k9nHiB2lrchzH2dIc2x4IvIKK7TJ7z1bXIu2ICW1aUWnWoP7t1Pp8zsGNYeaHc5OftPIYEnpfETYSg5U1J1ioDxXb28OxMmAPRTIlH2KOi+0s2KpNnB03zqAe/W7Ag+kzi5Vwlxng=
+  file: "$ARCHIVE"
+  skip_cleanup: true
+  on:
+    tags: true
