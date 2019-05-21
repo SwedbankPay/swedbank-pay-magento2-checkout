@@ -35,6 +35,7 @@ before_script:
 
 script:
 - php validate_m2_package.php -d $ARCHIVE
+- rm validate_m2_package.php
 - |
   cat << EOF > auth.json
   {
