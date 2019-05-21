@@ -2,12 +2,17 @@ language: php
 sudo: false
 
 services:
-  - docker
+- docker
 
 php:
 - '5.6'
 - '7.0'
 - '7.1'
+
+env:
+  global:
+  - secure: Jfke3XzB85kf74UOTxGWbyyV6jknrVbqyL4KnSvJsIoHShXI3D5WXDCjELC+ECtxIVLuyipLVdG89ERP9/YvhJCkcOhiDM8HYs2cJYDm0e15UqjVLpIM6M8Phox1s3JTsun/JAyo1csfmZH+LQAl6JF5lVKXnXucz+wheFUXgKaPyBolHh5g4gACKpES9ndLsyA0+mqXEHm+WdZriDiCJHkNrXrhf8x5sY8QL+xhYE/S7zMYRdks4/2BpE9+ZWjVvhl3Nys/gLlciq6cCFVa1/cYGRWPy9Vp+/oJo6ad3vH/7jVWQOXxexdKLfUxEcceSLcft7eZmoK0GSki5Pd7WZDzHTDCxgx+7RYJZGV90BRXy/j8ArqkAET0TwEhlVP1vH1Xkm3uExv30hHGQ8Er7vEVFzMV3x5ek5nHFj7PDA4n14m8x/Nxv8/BZLlkLwGzEFUgij5+1lgp0wSiTP8c+Y0oZ1Te/mjM9ifp6e5eVJetYGsOeCZ6ypQAkXAtoG60yQPuBffWA9fYHD+GgB4pzDMpIRJVHM5SC774tQX+/FD+VBxlRieXWOFpSuEfnvvlUwHNL/60V/GkYeg7uvEzIIPkEE8Sb8sez/ufH8sOcp7uRpwN65iBMvX9nG1HoU159obulIfPiu31R5b35e/zcgsHqOwYDBLKUIxLyVOert4=
+  - secure: bXSlYynjWXK2VGovQD1GtFUfFrWJi0PI0FaGYg/NXZIuBl2kP928ml/QWpRTYxsjpsvUCNkJZEHFoZut757z4UW8RcjFuL6+ieMFPvX6LGkl4bsvX9WaNBAIkpH+AfRPOvcxVcM/0O/M5xRyc6lvLjqgXpuZRj3k8hN/yATBo2UEfUFr4UuXVCzDQLaL1MuW9n3/5PgEMdPcmrwk/zZx0XoOzi1JhtJcahj2cWVsZX5OGFU/dZe75EMtMjKEJXB7CRCGHLNWpo/s/TVfXYVDXqh2CaBpMF2VstgeNj7KygJY75NB8soGg8MoZZhAY2by3Z8Kpqx7GP4LGpUvLxU8XmIKewAqmjeJUi7/qipyRUPtpleexX9uj1A7G40sn/KuC3KbgB3XMTa8IfnXq56KjiUKX8AMcdleLxSEIPTCsgXxC9hvLxT/l5sBmZ8ByMXsISQTDYPprtwK9b11HAU/fJKE/aixsUI/N7DVratO4NKhxoDAkl6TrpXbH1o/zu9dZBIOPsc54QtaIMCwiibdDVZ/CJsP2+21Jo4l0aGFAF8upPFT5MO/fPGYz4jq1hKPChlqUWs05FydDT3Bs4nLIfNZWVfT06th+/+Xpzuka8qx1BVEcV6gqv8uVSOUhXYlYtXuHtLAqHxWqMcbRID1c7SG2txNxcMsujWqd+D7UhY=
 
 before_install:
 - git fetch --unshallow || true # Travis might do a shallow clone, but GitVersion needs the full history including branches and tags
@@ -31,6 +36,17 @@ before_script:
 
 script:
 - php validate_m2_package.php -d $ARCHIVE
+- |
+  cat << EOF > auth.json
+  {
+    "http-basic": {
+      "repo.magento.com": {
+        "username": "$MAGENTO_PUBLIC_KEY",
+        "password": "$MAGENTO_PRIVATE_KEY"
+      }
+    }
+  }
+  EOF
 - composer install
 - ./vendor/bin/phpcs --standard=Magento2 Plugin/Checkout/
 
