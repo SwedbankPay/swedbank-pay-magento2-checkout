@@ -31,6 +31,8 @@ before_script:
 
 script:
 - php validate_m2_package.php -d $ARCHIVE
+- composer install
+- ./vendor/bin/phpcs --standard=Magento2 Plugin/Checkout/
 
 deploy:
   provider: releases
