@@ -47,7 +47,7 @@ script:
   }
   EOF
 - composer install
-- ./vendor/bin/phpcs --standard=Magento2 Plugin/Checkout/
+- ./vendor/bin/phpcs --standard=Magento2 --report=full --ignore=vendor/* .
 
 deploy:
   provider: releases
