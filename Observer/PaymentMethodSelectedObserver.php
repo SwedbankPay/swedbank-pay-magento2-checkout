@@ -9,6 +9,9 @@ use Magento\Payment\Model\Method\Adapter;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use PayEx\Checkout\Helper\Config;
 
+/**
+ * Observes the payment method selected event.
+ */
 class PaymentMethodSelectedObserver implements ObserverInterface
 {
     /**
