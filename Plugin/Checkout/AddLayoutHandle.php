@@ -6,6 +6,9 @@ use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\View\Result\Page;
 use PayEx\Checkout\Helper\Config;
 
+/**
+ * Add layout handle class.
+ */
 class AddLayoutHandle
 {
     /**
