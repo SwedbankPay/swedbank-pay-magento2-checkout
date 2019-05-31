@@ -34,7 +34,9 @@ before_script:
 - zip -r $ARCHIVE * -x validate_m2_package.php
 
 script:
-- unzip -l $ARCHIVE | grep validate_m2_package.php && echo "Found validate_m2_package.php in $ARCHIVE" && exit 1
+- echo 'travis_fold:start:unzip'
+- unzip -l $ARCHIVE | grep validate_m2_package.php && echo "Found validate_m2_package.php in $ARCHIVE" && unzip -l $ARCHIVE && exit 1
+- echo 'travis_fold:end:unzip'
 - echo 'travis_fold:start:validate_m2_package'
 - php validate_m2_package.php -d $ARCHIVE
 - echo 'travis_fold:end:validate_m2_package'
