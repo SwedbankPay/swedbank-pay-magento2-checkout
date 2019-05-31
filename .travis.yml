@@ -31,7 +31,7 @@ before_script:
 - export SEMVER=$(docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
 - export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${SEMVER}.zip
 - echo $ARCHIVE
-- zip -r $ARCHIVE * -x *validate_m2_package*
+- zip -r $ARCHIVE * -x validate_m2_package.php
 
 script:
 - unzip -l $ARCHIVE | grep validate_m2_package.php && echo "Found validate_m2_package.php in $ARCHIVE" && exit 1
