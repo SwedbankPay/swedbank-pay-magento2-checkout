@@ -35,11 +35,11 @@ before_script:
 
 script:
 - unzip -l $ARCHIVE | grep validate_m2_package.php && echo "Found validate_m2_package.php in $ARCHIVE" && exit 1
-- echo -n 'travis_fold:start:validate_m2_package'
+- echo 'travis_fold:start:validate_m2_package'
 - php validate_m2_package.php -d $ARCHIVE
-- echo -n 'travis_fold:end:validate_m2_package'
+- echo 'travis_fold:end:validate_m2_package'
 - rm validate_m2_package.php
-- echo -n 'travis_fold:start:auth.json'
+- echo 'travis_fold:start:auth.json'
 - |
   cat << EOF > auth.json
   {
@@ -51,10 +51,10 @@ script:
     }
   }
   EOF
-- echo -n 'travis_fold:end:auth.json'
-- echo -n 'travis_fold:start:composer_install'
+- echo 'travis_fold:end:auth.json'
+- echo 'travis_fold:start:composer_install'
 - composer install
-- echo -n 'travis_fold:end:composer_install'
+- echo 'travis_fold:end:composer_install'
 - ./vendor/bin/phpcs --standard=Magento2 --report=full --ignore=vendor/* .
 
 deploy:
