@@ -1,4 +1,6 @@
-# PayEx Checkout for Magento 2 [![Build Status][badge]][build]
+# PayEx Checkout for Magento 2
+
+[![Build Status][build-badge]][build]
 
 The Official PayEx Checkout Extension for Magento 2 provides seamless
 integration with PayEx Checkout, allowing your customers to pay swiftly
@@ -112,10 +114,10 @@ To find the customer service available in your country, please visit
 
 PayEx Checkout for Magento 2 is released under [Apache V2.0 licence][license].
 
-  [contact]:  https://payex.se/tjanster/payex-checkout/
-  [admin]:    https://developer.payex.com/xwiki/wiki/developer/view/Main/ecommerce/resources/admin/
-  [cmpmgr]:   http://docs.magento.com/marketplace/user_guide/quick-tour/install-extension.html
-  [support]:  https://payex.com/customer-service/
-  [license]:  LICENSE
-  [badge]:    https://travis-ci.org/PayEx/payex-magento2-checkout.svg?branch=master
-  [build]:    https://travis-ci.org/PayEx/payex-magento2-checkout
+  [contact]:            https://payex.se/tjanster/payex-checkout/
+  [admin]:              https://developer.payex.com/xwiki/wiki/developer/view/Main/ecommerce/resources/admin/
+  [cmpmgr]:             http://docs.magento.com/marketplace/user_guide/quick-tour/install-extension.html
+  [support]:            https://payex.com/customer-service/
+  [license]:            LICENSE
+  [build-badge]:        https://travis-ci.org/PayEx/payex-magento2-checkout.svg?branch=master
+  [build]:              https://travis-ci.org/PayEx/payex-magento2-checkout
