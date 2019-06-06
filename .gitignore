@@ -3,3 +3,4 @@
 /composer.lock
 /auth.json
 *.zip
+validate_m2_package.php
