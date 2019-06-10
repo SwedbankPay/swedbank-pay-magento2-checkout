@@ -6,6 +6,10 @@ define([
     'use strict';
 
     return function (placeOrderAction) {
+        var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
+
+        if(!isEnabled){ return placeOrderAction; }
+
         return wrapper.wrap(placeOrderAction, function(placeOrderAction, data, message){
 
             var dfd = $.Deferred();

@@ -11,8 +11,10 @@ define([
 ], function ($, Component, ko, emailObserver) {
     'use strict';
 
-    return function (Shipping) {
-        return Shipping.extend({
+    var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
+
+    return function (Email) {
+        var mixin = {
             initialize: function(){
                 var self = this;
                 self._super();
@@ -21,6 +23,10 @@ define([
                     emailObserver.get(data);
                 });
             }
-        });
+        };
+
+        if(!isEnabled){ return Email; }
+
+        return Email.extend(mixin);
     };
 });

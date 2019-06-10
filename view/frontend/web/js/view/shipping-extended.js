@@ -14,9 +14,10 @@ define([
     'use strict';
 
     var shippingMethodVisible = ko.observable(false);
+    var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
 
     return function (Shipping) {
-        return Shipping.extend({
+        var mixin = {
             shippingMethodVisible: shippingMethodVisible,
             initialize: function(){
                 var self = this;
@@ -83,8 +84,6 @@ define([
                     this.triggerShippingDataValidateEvent();
 
                     if (emailValidationResult && this.source.get('params.invalid')) {
-                        this.focusInvalid();
-
                         return false;
                     }
                 }
@@ -97,6 +96,10 @@ define([
 
                 return true;
             }
-        });
+        };
+
+        if(!isEnabled){ return Shipping; }
+
+        return Shipping.extend(mixin);
     };
 });

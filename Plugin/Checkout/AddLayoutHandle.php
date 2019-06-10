@@ -34,7 +34,7 @@ class AddLayoutHandle
         $this->config = $config;
     }
 
-    public function afterAddDefaultHandle(Page $subject)
+    public function afterAddDefaultHandle(Page $subject, $result)
     {
         $modulename = $this->request->getModuleName();
         $fullActionName = $modulename .
@@ -45,6 +45,6 @@ class AddLayoutHandle
             $subject->addHandle('payex_checkout_index');
         }
 
-        return $subject;
+        return $result;
     }
 }
