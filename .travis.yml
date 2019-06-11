@@ -31,10 +31,10 @@ before_script:
 - export SEMVER=$(docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
 - export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${SEMVER}.zip
 - echo $ARCHIVE
-- ARCHIVE_CONTAINS_VALIDATE_SCRIPT=`zip -r $ARCHIVE * -x validate_m2_package.php | grep --silent validate_m2_package.php; echo $?`
+- zip -r $ARCHIVE *
+- zip -d $ARCHIVE validate_m2_package.php
 
 script:
-- if [ $ARCHIVE_CONTAINS_VALIDATE_SCRIPT -eq 0 ]; then echo "$ARCHIVE contains validate_m2_package.php" && exit 1; else echo "$ARCHIVE is fine"; fi
 - echo 'travis_fold:start:validate_m2_package'
 - php validate_m2_package.php -d $ARCHIVE
 - echo 'travis_fold:end:validate_m2_package'
