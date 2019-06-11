@@ -7,8 +7,9 @@ define([
 ) {
     'use strict';
 
-    return function(stepNavigator) {
+    var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
 
+    return function(stepNavigator) {
         var steps = stepNavigator.steps;
 
         var mixin = {
@@ -65,6 +66,8 @@ define([
                 // Do nothing
             },
         };
+
+        if(!isEnabled){ return stepNavigator; }
 
         return $.extend(stepNavigator, mixin);
     }
