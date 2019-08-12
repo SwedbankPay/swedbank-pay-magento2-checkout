@@ -8,9 +8,12 @@ define([
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_Checkout/js/action/get-payment-information',
+    'Magento_Checkout/js/action/select-shipping-address',
+    'Magento_Checkout/js/action/create-shipping-address',
+    'rjsResolver',
     'uiRegistry',
     'mage/translate'
-], function ($, ko, triggerShippingInformationValidation, emailObserver, quote, customer, stepNavigator, setShippingInformationAction, getPaymentInformation, registry, $t) {
+], function ($, ko, triggerShippingInformationValidation, emailObserver, quote, customer, stepNavigator, setShippingInformationAction, getPaymentInformation, selectShippingAddress, createShippingAddress, resolver, registry, $t) {
     'use strict';
 
     var shippingMethodVisible = ko.observable(false);
@@ -27,7 +30,7 @@ define([
                     callback({success: self.quickShippingInformationValidation(), message: 'validateShippingInformation was ran!'});
                 };
 
-                emailObserver.get = function(data){
+                emailObserver.get = function(){
                     if(self.quickShippingInformationValidation()) {
                         shippingMethodVisible(true);
                     } else {
@@ -50,6 +53,12 @@ define([
                     }
                 });
 
+                resolver(function(){
+                    if(self.quickShippingInformationValidation()) {
+                        shippingMethodVisible(true);
+                    }
+                });
+
                 shippingMethodVisible.subscribe(function(value){
                     if(value && quote.shippingMethod() && quote.shippingMethod().available){
                         getPaymentInformation().done(function(){
@@ -63,6 +72,8 @@ define([
                 registry.async('checkoutProvider')(function (checkoutProvider) {
                     checkoutProvider.on('shippingAddress', function (shippingAddrsData) {
                         if(self.quickShippingInformationValidation()) {
+                            var newShippingAddress = createShippingAddress(shippingAddrsData);
+                            selectShippingAddress(newShippingAddress);
                             shippingMethodVisible(true);
                         } else {
                             shippingMethodVisible(false);
