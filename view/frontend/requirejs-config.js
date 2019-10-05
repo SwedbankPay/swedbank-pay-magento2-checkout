@@ -2,17 +2,23 @@ var config = {
     config: {
         mixins: {
             "Magento_Checkout/js/view/shipping": {
-                "PayEx_Checkout/js/view/shipping-extended": true
+                "SwedbankPay_Checkout/js/view/shipping-extended": true
             },
             "Magento_Checkout/js/view/form/element/email": {
-                "PayEx_Checkout/js/view/email-extended": true
+                "SwedbankPay_Checkout/js/view/email-extended": true
             },
             "Magento_Checkout/js/model/step-navigator": {
-                "PayEx_Checkout/js/model/step-navigator-mixin": true
+                "SwedbankPay_Checkout/js/model/step-navigator-mixin": true
             },
             "Magento_Checkout/js/action/place-order": {
-                "PayEx_Checkout/js/action/place-order-wrapper": true
+                "SwedbankPay_Checkout/js/action/place-order-wrapper": true
             }
         }
+    },
+    map: {
+        "*": {
+            "checkinStyling": "SwedbankPay_Checkout/js/checkin-styling",
+            "paymentMenuStyling": "SwedbankPay_Checkout/js/payment-menu-styling"
+        }
     }
-}
+};

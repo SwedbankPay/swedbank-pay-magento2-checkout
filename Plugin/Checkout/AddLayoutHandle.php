@@ -1,14 +1,11 @@
 <?php
 
-namespace PayEx\Checkout\Plugin\Checkout;
+namespace SwedbankPay\Checkout\Plugin\Checkout;
 
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\View\Result\Page;
-use PayEx\Checkout\Helper\Config;
+use SwedbankPay\Checkout\Helper\Config;
 
-/**
- * Add layout handle class.
- */
 class AddLayoutHandle
 {
     /**
@@ -42,7 +39,7 @@ class AddLayoutHandle
                             '_' . $this->request->getActionName();
 
         if ($fullActionName == 'checkout_index_index' && $this->config->isActive()) {
-            $subject->addHandle('payex_checkout_index');
+            $subject->addHandle('swedbank_pay_checkout_index');
         }
 
         return $result;

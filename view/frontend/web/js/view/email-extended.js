@@ -7,11 +7,11 @@ define([
     'jquery',
     'uiComponent',
     'ko',
-    'PayEx_Checkout/js/action/email-observer',
+    'SwedbankPay_Checkout/js/action/email-observer',
 ], function ($, Component, ko, emailObserver) {
     'use strict';
 
-    var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
+    var isEnabled = window.checkoutConfig.SwedbankPay_Checkout.isEnabled;
 
     return function (Email) {
         var mixin = {

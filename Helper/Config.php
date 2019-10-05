@@ -1,19 +1,27 @@
 <?php
 
-namespace PayEx\Checkout\Helper;
+namespace SwedbankPay\Checkout\Helper;
 
-use PayEx\Core\Helper\Config as CoreConfig;
+use SwedbankPay\Checkout\Model\Ui\ConfigProvider;
+use SwedbankPay\Core\Helper\Config as CoreConfig;
 
-/**
- * Configuration class.
- */
 class Config extends CoreConfig
 {
     const XML_CONFIG_GROUP = 'checkout';
 
     protected $moduleDependencies = [
-        'PayEx_Client',
-        'PayEx_Checkin',
-        'PayEx_PaymentMenu'
+        'SwedbankPay_Core'
     ];
+
+    /**
+     * Get the order status that should be set on orders that have been processed by SwedbankPay
+     *
+     * @param Store|int|string|null  $store
+     *
+     * @return string
+     */
+    public function getProcessedOrderStatus($store = null)
+    {
+        return $this->getPaymentValue('order_status', ConfigProvider::CODE, $store);
+    }
 }
