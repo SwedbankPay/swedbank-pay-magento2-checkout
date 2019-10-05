@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="SwedbankPay_Checkout::css/swedbank_pay_checkin.css"/>
+    </head>
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="SwedbankPay\Checkout\Block\Widget\CheckinWidget" name="swedbank_pay.checkin.script" template="SwedbankPay_Checkout::widget/checkin-script.phtml" ifconfig="swedbank_pay/checkout/active" before="-"/>
+        </referenceContainer>
+    </body>
+</page>

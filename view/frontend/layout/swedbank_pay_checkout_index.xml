@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+    	<css src="SwedbankPay_Checkout::css/swedbank_pay_checkout.css"/>
+    </head>
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="config" xsi:type="array">
+                                <item name="template" xsi:type="string">SwedbankPay_Checkout/onepage</item>
+                            </item>
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="checkin-widget" xsi:type="array">
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="template" xsi:type="string">SwedbankPay_Checkout/checkin</item>
+                                                    </item>
+                                                    <item name="sortOrder" xsi:type="string">0</item>
+                                                    <item name="component" xsi:type="string">SwedbankPay_Checkout/js/view/checkin</item>
+                                                </item>
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="template" xsi:type="string">SwedbankPay_Checkout/shipping</item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="renders" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="swedbank_pay" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">SwedbankPay_Checkout/js/view/payment/payment-list</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="swedbank_pay_checkout" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                                <item name="sidebar" xsi:type="array">
+                                    <item name="config" xsi:type="array">
+                                        <item name="template" xsi:type="string">SwedbankPay_Checkout/sidebar</item>
+                                    </item>
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-information" xsi:type="array">
+                                            <item name="config" xsi:type="array">
+                                                <item name="componentDisabled" xsi:type="boolean">true</item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

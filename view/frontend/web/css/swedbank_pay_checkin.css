@@ -1,0 +1,41 @@
+@import url('./fonts.css');
+
+:root {
+    --orange-color: #EE7023;
+    --orange-hover-color: #e66212;
+    --yellow-color: #FDC129;
+    --light-brown: #d4c4bc;
+    --brown-color: #512b2b;
+}
+
+.swedbank-pay-checkin__wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 2rem;
+}
+.swedbank-pay-checkin__wrapper .swedbank-pay-checkin__subtitle {
+    font-family: Swedbank Headline,Arial,sans-serif;
+    width: 100%;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--brown-color);
+}
+
+.swedbank-pay-checkin__wrapper .swedbank-pay-checkin__iframe {
+    width: 100%;
+}
+
+.swedbank-pay-checkin__wrapper .swedbank-pay-checkin__loggedIn-info {
+    font-size: 20px;
+}
+
+.swedbank-pay-checkin__wrapper .swedbank-pay-checkin__loggedIn-info .value {
+    font-weight: 700;
+}
+
+.swedbank-pay-checkin__wrapper .swedbank-pay-checkin__actions {
+    display: flex;
+    margin-top: 1.5rem;
+}
