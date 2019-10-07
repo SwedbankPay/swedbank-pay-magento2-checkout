@@ -29,7 +29,7 @@ install:
 before_script:
 - docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json
 - export SEMVER=$(docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
-- export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${SEMVER}.zip
+- export ARCHIVE=${TRAVIS_REPO_SLUG#SwedbankPay/}-${SEMVER}.zip
 - echo $ARCHIVE
 - zip -r $ARCHIVE *
 - zip -d $ARCHIVE validate_m2_package.php
