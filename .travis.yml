@@ -35,11 +35,8 @@ before_script:
 - zip -d $ARCHIVE validate_m2_package.php
 
 script:
-- echo 'travis_fold:start:validate_m2_package'
 - php validate_m2_package.php -d $ARCHIVE
-- echo 'travis_fold:end:validate_m2_package'
 - rm validate_m2_package.php
-- echo 'travis_fold:start:auth.json'
 - |
   cat << EOF > auth.json
   {
@@ -51,10 +48,7 @@ script:
     }
   }
   EOF
-- echo 'travis_fold:end:auth.json'
-- echo 'travis_fold:start:composer_install'
 - composer install
-- echo 'travis_fold:end:composer_install'
 - ./vendor/bin/phpcs --standard=Magento2 --report=full --ignore=vendor/* .
 
 deploy:
