@@ -14,11 +14,5 @@ var config = {
                 "SwedbankPay_Checkout/js/action/place-order-wrapper": true
             }
         }
-    },
-    map: {
-        "*": {
-            "checkinStyling": "SwedbankPay_Checkout/js/checkin-styling",
-            "paymentMenuStyling": "SwedbankPay_Checkout/js/payment-menu-styling"
-        }
     }
 };

@@ -94,10 +94,12 @@
     background-color: var(--orange-color);
     border: 0;
     color: #fff;
+    margin-top: 0;
 }
 
 #checkout button.action:hover {
     background-color: var(--orange-hover-color);
+    text-decoration: none;
 }
 
 #checkout a {
@@ -153,7 +155,8 @@
     border-width: 1px 1px 2px;
 }
 
-.opc-block-summary .items-in-cart .title:before {
+.opc-block-summary .items-in-cart .title:before,
+#checkout .payment-method:before {
     content: "";
     position: absolute;
     background-color: rgba(0,0,0,0);
@@ -298,19 +301,6 @@
     background-color: transparent;
 }
 
-#checkout .payment-method:before {
-    content: "";
-    position: absolute;
-    background-color: rgba(0,0,0,0);
-    height: 4px;
-    left: -1px;
-    right: -1px;
-    top: -1px;
-    -webkit-transition: background-color .15s ease;
-    -o-transition: background-color .15s ease;
-    transition: background-color .15s ease;
-}
-
 #checkout .payment-method._active:before {
     background-color: var(--yellow-color);
     -webkit-transition: background-color .15s ease;
@@ -336,6 +326,12 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+}
+
+#checkout .payment-method .actions-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 #checkout .payment-method input[type=radio],
@@ -421,9 +417,6 @@
     border-radius: 0;
     -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
     transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
     line-height: 1.5;
     height: 48px;
 }
@@ -435,6 +428,13 @@
 }
 
 /* media query */
+@media only screen and (max-width: 1000px) {
+    #checkout .payment-method .actions-toolbar {
+        justify-content: center;
+        margin-top: 10px;
+    }
+}
+
 @media only screen and (max-width: 1450px) {
     #checkout .field-tooltip .field-tooltip-content {
         right: -10px;
@@ -458,7 +458,6 @@
         margin-top: -21px;
         right: 10px;
         left: auto;
-        top: 0;
         border-bottom-color: #f4f4f4;
         top: 1px;
     }

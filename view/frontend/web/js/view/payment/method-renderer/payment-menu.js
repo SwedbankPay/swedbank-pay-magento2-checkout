@@ -17,9 +17,8 @@ define([
     'Magento_Checkout/js/action/redirect-on-success',
     'SwedbankPay_Checkout/js/action/open-shipping-information',
     'Magento_Checkout/js/model/full-screen-loader',
-    'paymentMenuStyling',
     'mage/cookies'
-], function (Component, ko, $, storage, placeOrderAction, selectPaymentMethodAction, quote, customer, paymentService, checkoutData, checkoutDataResolver, registry, additionalValidators, Messages, layout, redirectOnSuccessAction, openShippingInformation, fullscreenLoader, paymentMenuStyling) {
+], function (Component, ko, $, storage, placeOrderAction, selectPaymentMethodAction, quote, customer, paymentService, checkoutData, checkoutDataResolver, registry, additionalValidators, Messages, layout, redirectOnSuccessAction, openShippingInformation, fullscreenLoader) {
     'use strict';
 
     return Component.extend({
@@ -104,7 +103,6 @@ define([
             payex.hostedView.paymentMenu({
                 container: 'swedbank-pay-checkout',
                 //culture: this.config.culture,
-                style: paymentMenuStyling,
                 onPaymentCompleted: this.onPaymentCompleted.bind(this),
                 onPaymentFailed: this.onPaymentFailed.bind(this),
                 onPaymentCreated: this.onPaymentCreated.bind(this),
