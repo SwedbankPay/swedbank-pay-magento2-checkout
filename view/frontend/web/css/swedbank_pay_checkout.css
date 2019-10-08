@@ -335,39 +335,39 @@
 }
 
 #checkout .payment-method input[type=radio],
-#checkout .payment-method input[type=checkbox] {
-    opacity: 0;
+#checkout .payment-method input[type=checkbox],
+#opc-shipping_method .table-checkout-shipping-method input[type=radio] {
+    -webkit-appearance: none;
 }
 
-#checkout .payment-method input[type=radio]+label:before,
-#checkout .payment-method input[type=checkbox]+label:before {
-    content: "";
-    position: absolute;
-    visibility: visible;
-    left: -28px;
+#checkout .payment-method input[type=radio],
+#checkout .payment-method input[type=checkbox],
+#opc-shipping_method .table-checkout-shipping-method input[type=radio] {
     height: 20px;
     width: 20px;
     background-color: #fff;
-    border: 1px solid #999;
+    border: 2px solid #fff;
+    box-shadow: 0 0 2px #333;
     cursor: pointer;
     border-radius: 50%;
 }
 
-#checkout .payment-method input[type=checkbox]+label:before {
+#checkout .payment-method input[type=radio]:focus,
+#checkout .payment-method input[type=checkbox]:focus,
+#opc-shipping_method .table-checkout-shipping-method input[type=radio]:focus {
+    outline: none;
+}
+
+#checkout .payment-method input[type=checkbox] {
     border-radius: 2px;
-    left: 35px;
-    height: 20px;
-    width: 20px;
 }
 
-#checkout .payment-method input[type=radio]:checked+label:before {
-    background-position: 50% 50%;
-    background-color: var(--yellow-color);
-    background-repeat: no-repeat;
-    background-image: url(../images/circle.svg);
+#checkout .payment-method input[type=radio]:checked,
+#opc-shipping_method .table-checkout-shipping-method input[type=radio] {
+    border: 6px solid var(--yellow-color);
 }
 
-#checkout .payment-method input[type=checkbox]:checked+label:before {
+#checkout .payment-method input[type=checkbox]:checked {
     background-position: 50% 50%;
     background-color: var(--medium-brown-color);
     background-repeat: no-repeat;
@@ -377,6 +377,11 @@
 #checkout .checkout-billing-address .billing-address-details {
     padding: 0;
     font-size: 14px;
+}
+
+#checkout .checkout-billing-address .billing-address-same-as-shipping-block {
+    display: flex;
+    align-items: center;
 }
 
 #checkout .checkout-payment-method {
