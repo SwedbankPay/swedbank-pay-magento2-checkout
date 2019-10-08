@@ -38,5 +38,17 @@
     "psr-4" : {
       "SwedbankPay\\Checkout\\" : ""
     }
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "*",
+    "magento/magento-coding-standard": "*"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ],
+    "post-update-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ]
   }
 }
