@@ -51,7 +51,7 @@ the following instructions:
 3. Enable the modules:
 
     ```sh
-    bin/magento module:enable --clear-static-content SwedbankPay_Core SwedbankPay_Client SwedbankPay_Checkin SwedbankPay_PaymentMenu SwedbankPay_Checkout
+    bin/magento module:enable --clear-static-content Swedbank Pay_Core Swedbank Pay_Checkout
     ```
 
 4. Upgrade setup:
@@ -78,10 +78,10 @@ Swedbank Pay Checkout configuration can be found under **Stores** >
 **Configuration** > **Sales** > **Payment Methods** > **Swedbank Pay** >
 **Configure**.
 
-As parts of the Swedbank Pay Checkout installation we have **Client**, **Checkout**, **Checkin** and **Payment Menu**
+As parts of the Swedbank Pay Checkout installation we have **Core**, **Checkout** and **Payment Menu**
 with configurable options as follows:
 
-### Client
+### Core
 
 * **Enabled**: Status of the module.
 * **Merchant Account**: Your Swedbank Pay Merchant Account ID.
@@ -93,15 +93,11 @@ with configurable options as follows:
 ### Checkout
 
 * **Enabled**: Status of the module.
-
-### Checkin
-
-* **Enabled**: Status of the module.
 * **Required**: Enable to require checkin in checkout.
 
 ### Payment Menu
 
-* **Enabled**: Status of the module.
+* **Enabled**: Enable to active Swedbank Pay payment menu.
 * **Terms of Service Page**: Set page to link as terms of service page in checkout.
 
 ## Support
@@ -110,6 +106,8 @@ To find the customer service available in your country, please visit
 [the Swedbank Pay website][support].
 
 ## Release Notes
+
+* **1.1.0**: October 2019 - Now known as Swedbank Pay Checkout and with improved 1-phase payments support.
 
 * **1.0.0**: May 2019 - First official release.
 
