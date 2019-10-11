@@ -41,19 +41,19 @@ the following instructions:
 1. In the Magento root directory enter command:
 
     ```sh
-    composer require swedbank-pay/magento2-checkout
+    composer require swedbank-pay/magento2-checkout --no-update
     ```
 
-2. Make sure everything is up to date:
+2. Install module and required packages:
 
     ```sh
-    composer update
+    composer update swedbank-pay/magento2-checkout --with-dependencies
     ```
 
 3. Enable the modules:
 
     ```sh
-    bin/magento module:enable --clear-static-content Swedbank Pay_Core Swedbank Pay_Checkout
+    bin/magento module:enable --clear-static-content SwedbankPay_Core SwedbankPay_Checkout
     ```
 
 4. Upgrade setup:
