@@ -2,7 +2,6 @@
   "name" : "swedbank-pay/magento2-checkout",
   "description" : "Replaces checkout in Magento 2 with a onepage checkout with prepared SwedbankPay elements",
   "type" : "magento2-module",
-  "version": "1.1.0",
   "license": "Apache-2.0",
   "authors" : [
     {
@@ -39,5 +38,17 @@
     "psr-4" : {
       "SwedbankPay\\Checkout\\" : ""
     }
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "*",
+    "magento/magento-coding-standard": "*"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ],
+    "post-update-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ]
   }
 }

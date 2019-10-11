@@ -5,6 +5,7 @@ services:
 - docker
 
 php:
+- '7.0'
 - '7.1'
 - '7.2'
 
@@ -27,12 +28,20 @@ install:
 - docker pull $GITVERSION
 
 before_script:
-- docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json
-- export SEMVER=$(docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
+- docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json > GitVersion.json
+- cat GitVersion.json
+- export SEMVER=$(jq -r '.FullSemVer' GitVersion.json)
+- export PRE_RELEASE_LABEL=$(if [ $(jq '.PreReleaseLabel' GitVersion.json) != '""' ]; then echo '-dev'; fi)
+- export COMPOSER_VERSION="$(jq -r ".MajorMinorPatch" GitVersion.json)$PRE_RELEASE_LABEL$(jq -r ".CommitsSinceVersionSourcePadded" GitVersion.json)"
 - export ARCHIVE=${TRAVIS_REPO_SLUG#SwedbankPay/}-${SEMVER}.zip
 - echo $ARCHIVE
+- jq ".version=\"$COMPOSER_VERSION\"" composer.json > composer.version.json # Add "version" property to composer.version.json
+- mv composer.json composer.clean.json
+- mv composer.version.json composer.json # Rename composer.version.json to composer.json
 - zip -r $ARCHIVE *
 - zip -d $ARCHIVE validate_m2_package.php
+- rm composer.json
+- mv composer.clean.json composer.json # Move the version-less composer.json back in place so `composer validate` won't react on it in the script section.
 
 script:
 - php validate_m2_package.php -d $ARCHIVE
@@ -48,6 +57,7 @@ script:
     }
   }
   EOF
+- composer validate
 - composer install
 - ./vendor/bin/phpcs --standard=Magento2 --report=full --ignore=vendor/* .
 
