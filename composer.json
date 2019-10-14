@@ -1,6 +1,6 @@
 {
   "name" : "swedbank-pay/magento2-checkout",
-  "description" : "Replaces checkout in Magento 2 with a onepage checkout with prepared SwedbankPay elements",
+  "description" : "Replaces checkout in Magento 2 with a onepage checkout with prepared Swedbank Pay elements",
   "type" : "magento2-module",
   "license": "Apache-2.0",
   "authors" : [
