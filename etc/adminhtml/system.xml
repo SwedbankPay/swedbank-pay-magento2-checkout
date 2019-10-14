@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="payment">
-            <group id="payex" translate="label" type="text"
+            <group id="swedbank_pay" translate="label" type="text"
                    sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                 <group id="checkout" translate="label" type="text"
                        sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -11,10 +11,43 @@
                     <field id="active" translate="label" type="select"
                            sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enabled</label>
-                        <config_path>payex/checkout/active</config_path>
+                        <config_path>swedbank_pay/checkout/active</config_path>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <depends>
-                            <field id="payex/client/active">1</field>
+                            <field id="swedbank_pay/core/active">1</field>
+                        </depends>
+                    </field>
+                    <field id="required" translate="label" type="select"
+                           sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Checkin Required</label>
+                        <config_path>swedbank_pay/checkout/required</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment><![CDATA[Require login through checkin widget.]]></comment>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
+                    </field>
+                </group>
+                <group id="payment_menu" translate="label" type="text"
+                       sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment Menu Configuration</label>
+                    <field id="active" translate="label" type="select"
+                           sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <config_path>payment/swedbank_pay_checkout/active</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <depends>
+                            <field id="swedbank_pay/checkout/active">1</field>
+                        </depends>
+                    </field>
+                    <field id="tos_page" translate="label comment" type="select"
+                           sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Terms of Service Page</label>
+                        <source_model>SwedbankPay\Checkout\Model\Config\Source\TosPage</source_model>
+                        <config_path>swedbank_pay/checkout/tos_page</config_path>
+                        <comment><![CDATA[Set page to link as terms of service page in checkout.]]></comment>
+                        <depends>
+                            <field id="active">1</field>
                         </depends>
                     </field>
                 </group>

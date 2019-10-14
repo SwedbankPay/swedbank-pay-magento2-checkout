@@ -1,57 +1,59 @@
-# PayEx Checkout for Magento 2
+# Swedbank Pay Checkout for Magento 2
 
 [![Build Status][build-badge]][build]
 [![Latest Stable Version][version-badge]][packagist]
 [![Total Downloads][downloads-badge]][packagist]
 [![License][license-badge]][packagist]
 
-The Official PayEx Checkout Extension for Magento 2 provides seamless
-integration with PayEx Checkout, allowing your customers to pay swiftly
+![Swedbank Pay Magento 2 Checkout][og-image]
+
+The Official Swedbank Pay Checkout Extension for Magento 2 provides seamless
+integration with Swedbank Pay Checkout, allowing your customers to pay swiftly
 and securely with credit card, invoice (Norway and Sweden), Vipps (Norway)
 and Swish (Sweden). Credit card payments are available world-wide.
 
 ## Requirements
 
 * Magento Open Source/Commerce version 2.2 or newer
-* A PayEx merchant account, read more and [contact us][contact] to get one.
+* A Swedbank Pay merchant account, read more and [contact us][contact] to get one.
 
-**Please Note:** When your PayEx Merchant Account is created, there are a
+**Please Note:** When your Swedbank Pay Merchant Account is created, there are a
 [few things you need to attend to][admin] before you can start using it.
 
 ## Installation
 
-PayEx Checkout for Magento 2 may be installed via Magento Marketplace or
+Swedbank Pay Checkout for Magento 2 may be installed via Magento Marketplace or
 Composer.
 
 ### Magento Marketplace
 
 If you have linked your Marketplace account to your Magento 2 store, you may
-install the PayEx Checkout for Magento 2 with the Magento Component Manager.
+install the Swedbank Pay Checkout for Magento 2 with the Magento Component Manager.
 
 For installation using the Component Manager, please see the
 [official guide][cmpmgr].
 
 ### Composer
 
-PayEx Checkout for Magento 2 can alternatively be installed via composer with
+Swedbank Pay Checkout for Magento 2 can alternatively be installed via composer with
 the following instructions:
 
 1. In the Magento root directory enter command:
 
     ```sh
-    composer require payex/magento2-checkout
+    composer require swedbank-pay/magento2-checkout --no-update
     ```
 
-2. Make sure everything is up to date:
+2. Install module and required packages:
 
     ```sh
-    composer update
+    composer update swedbank-pay/magento2-checkout --with-dependencies
     ```
 
 3. Enable the modules:
 
     ```sh
-    bin/magento module:enable --clear-static-content PayEx_Core PayEx_Client PayEx_Checkin PayEx_PaymentMenu PayEx_Checkout
+    bin/magento module:enable --clear-static-content SwedbankPay_Core SwedbankPay_Checkout
     ```
 
 4. Upgrade setup:
@@ -74,57 +76,56 @@ the following instructions:
 
 ## Configuration
 
-PayEx Checkout configuration can be found under **Stores** >
-**Configuration** > **Sales** > **Payment Methods** > **PayEx** >
+Swedbank Pay Checkout configuration can be found under **Stores** >
+**Configuration** > **Sales** > **Payment Methods** > **Swedbank Pay** >
 **Configure**.
 
-As parts of the PayEx Checkout installation we have **Client**, **Checkout**, **Checkin** and **Payment Menu**
+As parts of the Swedbank Pay Checkout installation we have **Core**, **Checkout** and **Payment Menu**
 with configurable options as follows:
 
-### Client
+### Core
 
 * **Enabled**: Status of the module.
-* **Merchant Account**: Your PayEx Merchant Account ID.
-* **Payee ID**: Your PayEx Payee ID.
-* **Payee Name**: Your PayEx Payee Name.
+* **Merchant Account**: Your Swedbank Pay Merchant Account ID.
+* **Payee ID**: Your Swedbank Pay Payee ID.
+* **Payee Name**: Your Swedbank Pay Payee Name.
 * **Test Mode**: Only disable in live production site.
 * **Debug Mode**: Enable this for more in-depth logging, should be off by default.
 
 ### Checkout
 
 * **Enabled**: Status of the module.
-
-### Checkin
-
-* **Enabled**: Status of the module.
 * **Required**: Enable to require checkin in checkout.
 
 ### Payment Menu
 
-* **Enabled**: Status of the module.
+* **Enabled**: Enable to active Swedbank Pay payment menu.
 * **Terms of Service Page**: Set page to link as terms of service page in checkout.
 
 ## Support
 
 To find the customer service available in your country, please visit
-[the PayEx website][support].
+[the Swedbank Pay website][support].
 
 ## Release Notes
+
+* **1.1.0**: October 2019 - Now known as Swedbank Pay Checkout and with improved 1-phase payments support.
 
 * **1.0.0**: May 2019 - First official release.
 
 ## License
 
-PayEx Checkout for Magento 2 is released under [Apache V2.0 licence][license].
+Swedbank Pay Checkout for Magento 2 is released under [Apache V2.0 licence][license].
 
-  [contact]:            https://payex.se/tjanster/payex-checkout/
-  [admin]:              https://developer.payex.com/xwiki/wiki/developer/view/Main/ecommerce/resources/admin/
+  [contact]:            https://swedbankpay.se/tjanster/swedbank-pay-checkout/
+  [admin]:              https://developer.swedbankpay.com/xwiki/wiki/developer/view/Main/ecommerce/resources/admin/
   [cmpmgr]:             http://docs.magento.com/marketplace/user_guide/quick-tour/install-extension.html
-  [support]:            https://payex.com/customer-service/
+  [support]:            https://swedbankpay.com/customer-service/
   [license]:            LICENSE
-  [build-badge]:        https://travis-ci.org/PayEx/payex-magento2-checkout.svg?branch=master
-  [build]:              https://travis-ci.org/PayEx/payex-magento2-checkout
-  [version-badge]:      https://poser.pugx.org/payex/magento2-checkout/version
-  [downloads-badge]:    https://poser.pugx.org/payex/magento2-checkout/downloads
-  [license-badge]:      https://poser.pugx.org/payex/magento2-checkout/license
-  [packagist]:          https://packagist.org/packages/payex/magento2-checkout
+  [build-badge]:        https://travis-ci.org/SwedbankPay/swedbank-pay-magento2-checkout.svg?branch=master
+  [build]:              https://travis-ci.org/SwedbankPay/swedbank-pay-magento2-checkout
+  [version-badge]:      https://poser.pugx.org/swedbank-pay/magento2-checkout/version
+  [downloads-badge]:    https://poser.pugx.org/swedbank-pay/magento2-checkout/downloads
+  [license-badge]:      https://poser.pugx.org/swedbank-pay/magento2-checkout/license
+  [packagist]:          https://packagist.org/packages/swedbank-pay/magento2-checkout
+  [og-image]:           https://repository-images.githubusercontent.com/211832269/3fa9e200-e7ac-11e9-8605-6c9b766b24e6

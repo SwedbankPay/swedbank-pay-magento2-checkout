@@ -1,12 +1,12 @@
 define([
     'jquery',
     'mage/utils/wrapper',
-    'PayEx_Checkout/js/action/trigger-shipping-information-validation'
+    'SwedbankPay_Checkout/js/action/trigger-shipping-information-validation'
 ], function ($, wrapper, triggerShippingInformationValidation) {
     'use strict';
 
     return function (placeOrderAction) {
-        var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
+        var isEnabled = window.checkoutConfig.SwedbankPay_Checkout.isEnabled;
 
         if(!isEnabled){ return placeOrderAction; }
 

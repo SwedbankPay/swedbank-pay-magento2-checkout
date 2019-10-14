@@ -1,17 +1,14 @@
 <?php
 
-namespace PayEx\Checkout\Observer;
+namespace SwedbankPay\Checkout\Observer;
 
 use Magento\Framework\Event\Manager;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Payment\Model\Method\Adapter;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
-use PayEx\Checkout\Helper\Config;
+use SwedbankPay\Checkout\Helper\Config;
 
-/**
- * Observes the payment method selected event.
- */
 class PaymentMethodSelectedObserver implements ObserverInterface
 {
     /**
@@ -53,9 +50,9 @@ class PaymentMethodSelectedObserver implements ObserverInterface
         // $modelCode = $observer->getData(AbstractDataAssignObserver::MODEL_CODE);
         // $dataCode = $observer->getData(AbstractDataAssignObserver::DATA_CODE);
 
-        if (strpos($methodCode, 'payex') !== false) {
+        if (strpos($methodCode, 'swedbank_pay') !== false) {
             $this->eventManager->dispatch(
-                'payex_paymentmenu_payment_menu_selected',
+                'swedbank_pay_checkout_payment_menu_selected',
                 []
             );
         }

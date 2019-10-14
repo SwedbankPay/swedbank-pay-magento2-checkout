@@ -3,11 +3,11 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="payex_checkout_additional_provider" xsi:type="object">PayEx\Checkout\Model\Checkout\AdditionalConfigVars</item>
+                <item name="swedbank_pay_checkout_additional_provider" xsi:type="object">SwedbankPay\Checkout\Model\Checkout\AdditionalConfigVars</item>
             </argument>
         </arguments>
     </type>
     <type name="Magento\Framework\View\Result\Page">
-        <plugin name="PayExCheckoutHandle" type="PayEx\Checkout\Plugin\Checkout\AddLayoutHandle" sortOrder="10"/>
+        <plugin name="SwedbankPayCheckoutHandle" type="SwedbankPay\Checkout\Plugin\Checkout\AddLayoutHandle" sortOrder="10"/>
     </type>
 </config>

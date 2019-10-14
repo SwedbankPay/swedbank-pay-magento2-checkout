@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="SwedbankPay\Checkout\Model\ConsumerSession\Storage" type="Magento\Framework\Session\Storage">
+        <arguments>
+            <argument name="namespace" xsi:type="string">SwedbankPay_Checkout</argument>
+        </arguments>
+    </virtualType>
+    <type name="SwedbankPay\Checkout\Model\ConsumerSession">
+        <arguments>
+            <argument name="storage" xsi:type="object">SwedbankPay\Checkout\Model\ConsumerSession\Storage</argument>
+        </arguments>
+    </type>
+
+    <preference for="SwedbankPay\Checkout\Api\QuoteRepositoryInterface" type="SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository"/>
+    <preference for="SwedbankPay\Checkout\Api\Data\QuoteInterface" type="SwedbankPay\Checkout\Model\Quote"/>
+    <preference for="SwedbankPay\Checkout\Api\Data\QuoteSearchResultInterface" type="SwedbankPay\Checkout\Model\QuoteSearchResult"/>
+
+    <preference for="SwedbankPay\Checkout\Api\OrderRepositoryInterface" type="SwedbankPay\Checkout\Model\ResourceModel\OrderRepository"/>
+    <preference for="SwedbankPay\Checkout\Api\Data\OrderInterface" type="SwedbankPay\Checkout\Model\Order"/>
+    <preference for="SwedbankPay\Checkout\Api\Data\OrderSearchResultInterface" type="SwedbankPay\Checkout\Model\OrderSearchResult"/>
+
+    <type name="Magento\Quote\Model\QuoteRepository">
+        <plugin name="quoteRepositoryPlugin" type="SwedbankPay\Checkout\Plugin\QuoteRepositoryPlugin" sortOrder="1" disabled="false"/>
+    </type>
+
+    <type name="Magento\Sales\Model\OrderRepository">
+        <plugin name="orderRepositoryPlugin" type="SwedbankPay\Checkout\Plugin\OrderRepositoryPlugin" sortOrder="1" disabled="false"/>
+    </type>
+
+    <virtualType name="SwedbankPayPaymentMenuFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">SwedbankPay\Checkout\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SwedbankPayPaymentMenuValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SwedbankPayPaymentMenuValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SwedbankPayPaymentMenuCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SwedbankPayPaymentMenuValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SwedbankPayPaymentMenuConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SwedbankPayPaymentMenuConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">SwedbankPayPaymentMenuConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SwedbankPayPaymentMenuConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">SwedbankPay\Checkout\Model\Ui\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SwedbankPayPaymentMenuValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <!-- no validation -->
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SwedbankPayPaymentMenuCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">SwedbankPay\Checkout\Gateway\Command\Initialize</item>
+                <item name="capture" xsi:type="string">SwedbankPay\Checkout\Gateway\Command\Capture</item>
+                <item name="cancel" xsi:type="string">SwedbankPay\Checkout\Gateway\Command\Cancel</item>
+                <item name="void" xsi:type="string">SwedbankPay\Checkout\Gateway\Command\Cancel</item>
+                <item name="refund" xsi:type="string">SwedbankPay\Checkout\Gateway\Command\Refund</item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

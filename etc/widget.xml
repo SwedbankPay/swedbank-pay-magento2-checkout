@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SwedbankPay\Checkout\Block\Widget\CheckinWidget" id="swedbank_pay_checkin_widget">
+        <label>SwedbankPay Checkin Widget</label>
+        <description>SwedbankPay Checkin Widget</description>
+    </widget>
+</widgets>

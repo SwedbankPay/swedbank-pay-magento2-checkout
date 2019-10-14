@@ -1,8 +1,8 @@
 define([
     'jquery',
     'ko',
-    'PayEx_Checkout/js/action/trigger-shipping-information-validation',
-    'PayEx_Checkout/js/action/email-observer',
+    'SwedbankPay_Checkout/js/action/trigger-shipping-information-validation',
+    'SwedbankPay_Checkout/js/action/email-observer',
     'Magento_Checkout/js/model/quote',
     'Magento_Customer/js/model/customer',
     'Magento_Checkout/js/model/step-navigator',
@@ -17,7 +17,7 @@ define([
     'use strict';
 
     var shippingMethodVisible = ko.observable(false);
-    var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
+    var isEnabled = window.checkoutConfig.SwedbankPay_Checkout.isEnabled;
 
     return function (Shipping) {
         var mixin = {

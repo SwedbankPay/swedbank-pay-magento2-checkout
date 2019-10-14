@@ -1,0 +1,20 @@
+<!-- ko if: isVisible() -->
+    <div class="swedbank-pay-checkin__wrapper">
+        <p class="swedbank-pay-checkin__subtitle" data-bind="i18n: 'Checkin with SwedbankPay'"></p>
+
+        <div id="checkin-widget" class="swedbank-pay-checkin__iframe" data-bind="afterRender: swedbankPaySetupHostedView"></div>
+        <div class="swedbank-pay-checkin__actions">
+            <!-- ko if: !isCheckedIn() -->
+                <!-- ko if: !isRequired() -->
+                    <!-- ko if: !isShippingSectionVisible() -->
+                            <button class="swedbank-pay-checkin__skip button" data-bind="i18n: 'Proceed as guest', click: proceedAsGuest"></button>
+                    <!-- /ko -->
+                <!-- /ko -->
+            <!-- /ko -->
+
+            <!-- ko if: isCheckedIn() && !isShippingSectionVisible() -->
+                <button class="swedbank-pay-checkin__skip button" data-bind="i18n: 'Change shipping information', click: proceedAsGuest"></button>
+            <!-- /ko -->
+        </div>
+    </div>
+<!-- /ko -->

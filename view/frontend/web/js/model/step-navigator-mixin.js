@@ -7,7 +7,7 @@ define([
 ) {
     'use strict';
 
-    var isEnabled = window.checkoutConfig.PayEx_Checkout.isEnabled;
+    var isEnabled = window.checkoutConfig.SwedbankPay_Checkout.isEnabled;
 
     return function(stepNavigator) {
         var steps = stepNavigator.steps;

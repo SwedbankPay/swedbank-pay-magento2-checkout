@@ -1,0 +1,31 @@
+<?php
+/** @var \SwedbankPay\Checkout\Block\Widget\CheckinWidget $block */
+if ($block->isActive() && !$block->isConsumerIdentified()):?>
+    <div class="swedbank-pay-checkin__wrapper">
+        <p class="swedbank-pay-checkin__subtitle" data-bind="i18n: 'Checkin with SwedbankPay'"></p>
+        <div id="checkin-widget" class="swedbank-pay-checkin__iframe"></div>
+    </div>
+
+    <script type="text/x-magento-init">
+        {
+            "#checkin-widget": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "checkin-widget": {
+                            "config": {
+                                "data": {
+                                    "element": "checkin-widget",
+                                    "OnConsumerIdentifiedUrl": "<?= $block->getUrl('SwedbankPay/Checkin/Index/OnConsumerIdentified'); ?>",
+                                    "OnConsumerReidentifiedUrl": "<?= $block->getUrl('SwedbankPay/Checkin/Index/OnConsumerReidentified'); ?>",
+                                    "OnShippingDetailsAvailableUrl": "<?= $block->getUrl('SwedbankPay/Checkin/Index/OnShippingDetailsAvailable'); ?>",
+                                    "OnBillingDetailsAvailableUrl": "<?= $block->getUrl('SwedbankPay/Checkin/Index/OnBillingDetailsAvailable'); ?>"
+                                }
+                            },
+                            "component": "SwedbankPay_Checkout/js/view/checkin"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<?php endif; ?>

@@ -5,13 +5,14 @@ services:
 - docker
 
 php:
+- '7.0'
 - '7.1'
 - '7.2'
 
 env:
   global:
-  - secure: Jfke3XzB85kf74UOTxGWbyyV6jknrVbqyL4KnSvJsIoHShXI3D5WXDCjELC+ECtxIVLuyipLVdG89ERP9/YvhJCkcOhiDM8HYs2cJYDm0e15UqjVLpIM6M8Phox1s3JTsun/JAyo1csfmZH+LQAl6JF5lVKXnXucz+wheFUXgKaPyBolHh5g4gACKpES9ndLsyA0+mqXEHm+WdZriDiCJHkNrXrhf8x5sY8QL+xhYE/S7zMYRdks4/2BpE9+ZWjVvhl3Nys/gLlciq6cCFVa1/cYGRWPy9Vp+/oJo6ad3vH/7jVWQOXxexdKLfUxEcceSLcft7eZmoK0GSki5Pd7WZDzHTDCxgx+7RYJZGV90BRXy/j8ArqkAET0TwEhlVP1vH1Xkm3uExv30hHGQ8Er7vEVFzMV3x5ek5nHFj7PDA4n14m8x/Nxv8/BZLlkLwGzEFUgij5+1lgp0wSiTP8c+Y0oZ1Te/mjM9ifp6e5eVJetYGsOeCZ6ypQAkXAtoG60yQPuBffWA9fYHD+GgB4pzDMpIRJVHM5SC774tQX+/FD+VBxlRieXWOFpSuEfnvvlUwHNL/60V/GkYeg7uvEzIIPkEE8Sb8sez/ufH8sOcp7uRpwN65iBMvX9nG1HoU159obulIfPiu31R5b35e/zcgsHqOwYDBLKUIxLyVOert4=
-  - secure: bXSlYynjWXK2VGovQD1GtFUfFrWJi0PI0FaGYg/NXZIuBl2kP928ml/QWpRTYxsjpsvUCNkJZEHFoZut757z4UW8RcjFuL6+ieMFPvX6LGkl4bsvX9WaNBAIkpH+AfRPOvcxVcM/0O/M5xRyc6lvLjqgXpuZRj3k8hN/yATBo2UEfUFr4UuXVCzDQLaL1MuW9n3/5PgEMdPcmrwk/zZx0XoOzi1JhtJcahj2cWVsZX5OGFU/dZe75EMtMjKEJXB7CRCGHLNWpo/s/TVfXYVDXqh2CaBpMF2VstgeNj7KygJY75NB8soGg8MoZZhAY2by3Z8Kpqx7GP4LGpUvLxU8XmIKewAqmjeJUi7/qipyRUPtpleexX9uj1A7G40sn/KuC3KbgB3XMTa8IfnXq56KjiUKX8AMcdleLxSEIPTCsgXxC9hvLxT/l5sBmZ8ByMXsISQTDYPprtwK9b11HAU/fJKE/aixsUI/N7DVratO4NKhxoDAkl6TrpXbH1o/zu9dZBIOPsc54QtaIMCwiibdDVZ/CJsP2+21Jo4l0aGFAF8upPFT5MO/fPGYz4jq1hKPChlqUWs05FydDT3Bs4nLIfNZWVfT06th+/+Xpzuka8qx1BVEcV6gqv8uVSOUhXYlYtXuHtLAqHxWqMcbRID1c7SG2txNxcMsujWqd+D7UhY=
+  - secure: e1qU2CrWtzh1Anm/Gmtpb2ESFaeuswBrvkuJJ8aBkhCvT35/0ZuzTcL4/l2OGFd3CFxEYShkAm/hjhcj+n/w6TM/OQL+GbLY+hEk1DaXO9tTtwTMpJ3slufgW2z2uxAtVIyzVPrHpRpN8gR5QvEvYQ7qHrd+iTSXLTk7/6v8+alm845Y8ylzCb9Iaj2EhkdjWZHXjPxKivi8dmw6tRbz4D9nrP5ZpW6YFVSC6CjxzAuFJTRs2duWMKusGnRDhIGG8yFOK4TD/THhTOIT5ZDhIM+2SMcS7NkEiFQZw8bTquWI8GBS9m9UBQY66d+yJxKjUc/x7yRSX/8o3GstHgNGwJV8bYTdW1X1uw9ZSaJDoVlqCqdqme6i0/0xR5m74JqczI0fXRz48IfDhs7y0d8FGtju5PhyJd5CqmkM0Buhi3U5Fk0DXaNN5IVvUGOAuynbfkQR7nbSz7ASgw0lRj1ZpgDSaZRZZOd8T1vg1USj5/wBmWpMuDnSNByFdWKJIG2A+ctwQbz8Jqoi7/D7cWC3gcR6h8aY2zEFIt+1c4i4ysnDLMEem3bSMpGwkq2qu9yox3U4Nt9pFOQdpKdujtGGKhDVtRdtJo9cpobgsaRHW8cp+HLsag7sESrhcmAOa24JXrw4V9BmD+TwJhroGlb/IdeZ1sJt5wMR7596B1anRGs=
+  - secure: P1ZzI1NnFwgUBkCBOAcYzWfuq93Y4os2d0xhP5Zy/Zz/37dZbaXl3TvLc0zjmrd3aQdWpjzcnPZBDLTEH7j6UkPCrkJA34t/sOR02jNiPvnFsexcGMiMdg5l++hNJHwT1f+3bnxYwoxZ5Ah7xNQu6aB7y+51LohIM4QZBmJvVN+x8TrXdXwM3agZmME8ocPJgWfZfkBMc50NCTm1k9kuKUh6tAJCHme0smyV7cJBRfJ+svdvcna8874TcbTPsoTV5pmH1C5RIRpIB88C3E6qeZe37JlExfWI66PrAmjlDB5zp1zYDBUf1fwdmw5MuW3BMuFywj9OkakZyT0vesnWdaUj38WLGJoIZG2oGDJj7YqhLuzMCncMGWz1OLJSinEVifTzewXPITiUJeIueycbqkr5RJ9Qv/nM9Aucm8V82414Lhh9Ttuinf1J/8LlTeookpRPo/rbDwfvSPtRxbhSufXhhkPgxTQTyCBAgLup72yjjOGZl+g2p1zg3aA6pqsSAQYXp0OKlyp9lKlqPxYSoAj8RsQHkyZGb/7V9YqIHBZx+XdpbRdNMdMtxfAjG3SfN7ffHwLJDS4dal0H/s96eeLxRS5wrpE4hKf5pz7MqdKgzpduh/W+TSotudbXCD1y9U7V7tjqADw/QpCM3Dg3GR1joeR13GG+IEEy4Q1Pm4k=
 
 before_install:
 - git fetch --unshallow || true # Travis might do a shallow clone, but GitVersion needs the full history including branches and tags
@@ -27,19 +28,24 @@ install:
 - docker pull $GITVERSION
 
 before_script:
-- docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json
-- export SEMVER=$(docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json -showvariable FullSemVer)
-- export ARCHIVE=${TRAVIS_REPO_SLUG#PayEx/}-${SEMVER}.zip
+- docker run --rm --volume "$(pwd):/repo" $GITVERSION /repo -output json > GitVersion.json
+- cat GitVersion.json
+- export SEMVER=$(jq -r '.FullSemVer' GitVersion.json)
+- export PRE_RELEASE_LABEL=$(if [ $(jq '.PreReleaseLabel' GitVersion.json) != '""' ]; then echo '-dev'; fi)
+- export COMPOSER_VERSION="$(jq -r ".MajorMinorPatch" GitVersion.json)$PRE_RELEASE_LABEL$(jq -r ".CommitsSinceVersionSourcePadded" GitVersion.json)"
+- export ARCHIVE=${TRAVIS_REPO_SLUG#SwedbankPay/}-${SEMVER}.zip
 - echo $ARCHIVE
+- jq ".version=\"$COMPOSER_VERSION\"" composer.json > composer.version.json # Add "version" property to composer.version.json
+- mv composer.json composer.clean.json
+- mv composer.version.json composer.json # Rename composer.version.json to composer.json
 - zip -r $ARCHIVE *
 - zip -d $ARCHIVE validate_m2_package.php
+- rm composer.json
+- mv composer.clean.json composer.json # Move the version-less composer.json back in place so `composer validate` won't react on it in the script section.
 
 script:
-- echo 'travis_fold:start:validate_m2_package'
 - php validate_m2_package.php -d $ARCHIVE
-- echo 'travis_fold:end:validate_m2_package'
 - rm validate_m2_package.php
-- echo 'travis_fold:start:auth.json'
 - |
   cat << EOF > auth.json
   {
@@ -51,10 +57,8 @@ script:
     }
   }
   EOF
-- echo 'travis_fold:end:auth.json'
-- echo 'travis_fold:start:composer_install'
+- composer validate
 - composer install
-- echo 'travis_fold:end:composer_install'
 - ./vendor/bin/phpcs --standard=Magento2 --report=full --ignore=vendor/* .
 
 deploy:
