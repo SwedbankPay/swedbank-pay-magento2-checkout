@@ -117,10 +117,10 @@ To find the customer service available in your country, please visit
 
 Swedbank Pay Checkout for Magento 2 is released under [Apache V2.0 licence][license].
 
-  [contact]:            https://swedbankpay.se/tjanster/swedbank-pay-checkout/
-  [admin]:              https://developer.swedbankpay.com/xwiki/wiki/developer/view/Main/ecommerce/resources/admin/
+  [contact]:            https://www.swedbankpay.no/vare-losninger/ta-betalt-pa-nettet/checkout
+  [admin]:              https://developer.payex.com/xwiki/wiki/developer/view/Main/ecommerce/resources/admin/
   [cmpmgr]:             http://docs.magento.com/marketplace/user_guide/quick-tour/install-extension.html
-  [support]:            https://swedbankpay.com/customer-service/
+  [support]:            https://www.swedbankpay.no/support
   [license]:            LICENSE
   [build-badge]:        https://travis-ci.org/SwedbankPay/swedbank-pay-magento2-checkout.svg?branch=master
   [build]:              https://travis-ci.org/SwedbankPay/swedbank-pay-magento2-checkout
