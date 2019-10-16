@@ -174,8 +174,7 @@ class InstallSchema implements InstallSchemaInterface
                 $installer->getConnection()->createTable($table);
             } catch (\Zend_Db_Exception $e) {
                 // TODO: Implement Logger
-                echo $e->getMessage();
-                die();
+                throw $e;
             }
         }
 
@@ -333,8 +332,7 @@ class InstallSchema implements InstallSchemaInterface
                 $installer->getConnection()->createTable($table);
             } catch (\Zend_Db_Exception $e) {
                 // TODO: Implement Logger
-                echo $e->getMessage();
-                die();
+                throw $e;
             }
         }
 

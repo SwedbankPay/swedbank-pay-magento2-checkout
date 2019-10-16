@@ -153,9 +153,15 @@ abstract class AbstractCommand extends DataObject implements CommandInterface
      * @param $length
      * @return bool|string
      */
-    protected function generateRandomString($length)
+    protected function generateRandomString($length = 12)
     {
-        return substr(str_shuffle(md5(time())), 0, $length);
+        $characters = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
     /**
