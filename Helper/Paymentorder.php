@@ -374,6 +374,9 @@ class Paymentorder
      */
     public function getSwedbankPayPaymentorderId($paymentorderId)
     {
+        // TODO: Code like this should not exist, as it is a clear violation of one of the
+        //       most important design principles of Swedbank Pay's APIs:
+        //       https://developer.swedbankpay.com/#uri-usage
         return str_replace('/psp/paymentorders/', '', $paymentorderId);
     }
 
@@ -383,9 +386,15 @@ class Paymentorder
      * @param $length
      * @return bool|string
      */
-    protected function generateRandomString($length)
+    protected function generateRandomString($length = 12)
     {
-        return substr(str_shuffle(md5(time())), 0, $length);
+        $characters = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
     /**
