@@ -59,7 +59,7 @@ script:
   EOF
 - composer validate
 - composer install
-- ./vendor/bin/phpcs --standard=Magento2 --report=full --ignore=vendor/* .
+- ./vendor/bin/phpcs --standard=Magento2 --report=full --ignore=vendor/* -v .
 
 deploy:
   provider: releases
