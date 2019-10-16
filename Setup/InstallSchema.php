@@ -175,7 +175,7 @@ class InstallSchema implements InstallSchemaInterface
             } catch (\Zend_Db_Exception $e) {
                 // TODO: Implement Logger
                 echo $e->getMessage();
-                die();
+                throw $e;
             }
         }
 
@@ -334,7 +334,7 @@ class InstallSchema implements InstallSchemaInterface
             } catch (\Zend_Db_Exception $e) {
                 // TODO: Implement Logger
                 echo $e->getMessage();
-                die();
+                throw $e;
             }
         }
 
