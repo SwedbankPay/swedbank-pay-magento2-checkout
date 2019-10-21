@@ -17,6 +17,8 @@ use SwedbankPay\Core\Logger\Logger;
 use SwedbankPay\Checkout\Helper\Config as ConfigHelper;
 use SwedbankPay\Checkout\Helper\PaymentData;
 use SwedbankPay\Checkout\Model\Ui\ConfigProvider;
+use SwedbankPay\Checkout\Api\Data\OrderInterface as PaymentOrderInterface;
+
 
 class AfterCheckoutSubmitObserver implements ObserverInterface
 {
@@ -79,6 +81,10 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
 
         /** @var OrderInterface $order */
         $order = $observer->getEvent()->getData('order');
+
+        if (!$order || !($this->paymentData->getByOrder($order) instanceof PaymentOrderInterface)) {
+            return;
+        }
 
         /** @var OrderPaymentInterface $payment */
         $payment = $order->getPayment();
