@@ -7,6 +7,13 @@
 
 ![Swedbank Pay Magento 2 Checkout][og-image]
 
+## About
+
+**IMPORTANT**: This extension is at an early stage and not yet used in production.
+We do not offer support for this version, but will release supported versions
+in the future. Feel free to play around, but for full functionality and support,
+please wait for the supported, stable release.
+
 The Official Swedbank Pay Checkout Extension for Magento 2 provides seamless
 integration with Swedbank Pay Checkout, allowing your customers to pay swiftly
 and securely with credit card, invoice (Norway and Sweden), Vipps (Norway)
@@ -128,4 +135,4 @@ Swedbank Pay Checkout for Magento 2 is released under [Apache V2.0 licence][lice
   [downloads-badge]:    https://poser.pugx.org/swedbank-pay/magento2-checkout/downloads
   [license-badge]:      https://poser.pugx.org/swedbank-pay/magento2-checkout/license
   [packagist]:          https://packagist.org/packages/swedbank-pay/magento2-checkout
-  [og-image]:           https://repository-images.githubusercontent.com/211832269/3fa9e200-e7ac-11e9-8605-6c9b766b24e6
+  [og-image]:           https://repository-images.githubusercontent.com/211832269/616bd480-53ee-11ea-96f1-83ad4b3bf643
