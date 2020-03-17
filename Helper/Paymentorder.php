@@ -208,6 +208,7 @@ class Paymentorder
         $mageCancelUrl = $this->urlInterface->getUrl('checkout/cart');
         $mageCallbackUrl = $this->urlInterface->getUrl('SwedbankPayCheckout/Index/Callback');
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $baseUrlParts = parse_url($mageBaseUrl);
 
         $urlData = new PaymentorderUrl();

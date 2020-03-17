@@ -114,7 +114,6 @@ class Callback extends PaymentActionAbstract
         $this->setEventMethod([$this, 'updatePaymentData']);
     }
 
-
     /**
      * @return array|bool|ResponseInterface|ResultInterface|string
      * @throws Exception

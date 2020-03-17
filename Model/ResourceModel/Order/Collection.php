@@ -28,6 +28,6 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         // phpcs:enable
-        $this->_init('SwedbankPay\Menu\Model\Order', 'SwedbankPay\Menu\Model\ResourceModel\Order');
+        $this->_init(\SwedbankPay\Checkout\Model\Order::class, \SwedbankPay\Checkout\Model\ResourceModel\Order::class);
     }
 }

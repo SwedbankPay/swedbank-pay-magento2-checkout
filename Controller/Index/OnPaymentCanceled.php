@@ -27,6 +27,8 @@ class OnPaymentCanceled extends PaymentActionAbstract
 
     public function logCancellation($paymentId, $redirectUrl)
     {
-        $this->logger->debug(sprintf("SwedbankPay Payment Order %s was cancelled, redirecting to: %s", $paymentId, $redirectUrl));
+        $this->logger->debug(
+            sprintf("SwedbankPay Payment Order %s was cancelled, redirecting to: %s", $paymentId, $redirectUrl)
+        );
     }
 }

@@ -103,7 +103,11 @@ class Refund extends AbstractCommand
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);
 
-        $reversalRequest = $this->getRequestService('Paymentorder/Transaction', 'TransactionReversal', $transactionObject);
+        $reversalRequest = $this->getRequestService(
+            'Paymentorder/Transaction',
+            'TransactionReversal',
+            $transactionObject
+        );
         $reversalRequest->setRequestEndpointVars(
             $this->getSwedbankPayPaymentResourceId($paymentOrder->getPaymentOrderId())
         );

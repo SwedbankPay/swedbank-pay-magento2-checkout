@@ -243,7 +243,11 @@ class Capture extends AbstractCommand
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);
 
-        $captureRequest = $this->getRequestService('Paymentorder/Transaction', 'TransactionCapture', $transactionObject);
+        $captureRequest = $this->getRequestService(
+            'Paymentorder/Transaction',
+            'TransactionCapture',
+            $transactionObject
+        );
         $captureRequest->setRequestEndpointVars(
             $this->getSwedbankPayPaymentResourceId($paymentOrder->getPaymentOrderId())
         );

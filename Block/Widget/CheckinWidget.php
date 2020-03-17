@@ -137,6 +137,7 @@ class CheckinWidget extends Template implements BlockInterface
 
         if (!($response instanceof ResponseInterface) ||
             !($response->getResponseResource() instanceof ResponseResourceInterface)) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $this->logger->error(sprintf('Invalid InitiateConsumerSession response: %s', print_r($response, true)));
             return false;
         }
