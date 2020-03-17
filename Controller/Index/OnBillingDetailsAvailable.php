@@ -124,7 +124,7 @@ class OnBillingDetailsAvailable extends Action
         try {
             $url = $requestBody->url;
 
-            /** @var \PayEx\Api\Service\Data\RequestInterface $session */
+            /** @var \SwedbankPay\Api\Service\Data\RequestInterface $session */
             $session = $this->service->init('Consumer', 'GetBillingDetails');
             $session->setRequestMethod('GET');
             $session->setRequestEndpoint($url);

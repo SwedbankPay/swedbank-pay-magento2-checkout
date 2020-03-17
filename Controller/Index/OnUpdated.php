@@ -69,7 +69,7 @@ class OnUpdated extends PaymentActionAbstract
         $paymentOrderPurchase = $this->service->init('Paymentorder', 'purchase', $paymentOrderObject);
         $this->logger->debug(basename(__CLASS__) . ' triggered');
 
-        /** @var \PayEx\Api\Service\Data\ResponseInterface $response */
+        /** @var \SwedbankPay\Api\Service\Data\ResponseInterface $response */
         $response = $paymentOrderPurchase->send();
         $responseData = $response->getResponseData();
         $href = $response->getOperationByRel('view-paymentorder', 'href');

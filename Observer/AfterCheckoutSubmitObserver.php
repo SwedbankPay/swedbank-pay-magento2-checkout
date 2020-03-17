@@ -9,8 +9,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
-use PayEx\Api\Service\Paymentorder\Request\GetCurrentPayment;
-use PayEx\Api\Service\Paymentorder\Resource\Response\Data\GetCurrentPaymentInterface;
+use SwedbankPay\Api\Service\Paymentorder\Request\GetCurrentPayment;
+use SwedbankPay\Api\Service\Paymentorder\Resource\Response\Data\GetCurrentPaymentInterface;
 use SwedbankPay\Core\Model\Service as ClientService;
 use SwedbankPay\Core\Helper\Order as OrderHelper;
 use SwedbankPay\Core\Logger\Logger;
@@ -18,7 +18,6 @@ use SwedbankPay\Checkout\Helper\Config as ConfigHelper;
 use SwedbankPay\Checkout\Helper\PaymentData;
 use SwedbankPay\Checkout\Model\Ui\ConfigProvider;
 use SwedbankPay\Checkout\Api\Data\OrderInterface as PaymentOrderInterface;
-
 
 class AfterCheckoutSubmitObserver implements ObserverInterface
 {

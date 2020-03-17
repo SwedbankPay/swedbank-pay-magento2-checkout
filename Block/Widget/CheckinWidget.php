@@ -11,11 +11,11 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Widget\Block\BlockInterface;
-use PayEx\Api\Service\Consumer\Resource\ConsumerNationalIdentifier;
-use PayEx\Api\Service\Consumer\Resource\Request\InitiateConsumerSession as ConsumerSessionResource;
-use PayEx\Api\Service\Data\RequestInterface;
-use PayEx\Api\Service\Data\ResponseInterface;
-use PayEx\Api\Service\Resource\Data\ResponseInterface as ResponseResourceInterface;
+use SwedbankPay\Api\Service\Consumer\Resource\ConsumerNationalIdentifier;
+use SwedbankPay\Api\Service\Consumer\Resource\Request\InitiateConsumerSession as ConsumerSessionResource;
+use SwedbankPay\Api\Service\Data\RequestInterface;
+use SwedbankPay\Api\Service\Data\ResponseInterface;
+use SwedbankPay\Api\Service\Resource\Data\ResponseInterface as ResponseResourceInterface;
 use SwedbankPay\Checkout\Helper\Config;
 use SwedbankPay\Checkout\Model\ConsumerSession as SwedbankPayConsumerSession;
 use SwedbankPay\Core\Exception\ServiceException;
@@ -125,7 +125,7 @@ class CheckinWidget extends Template implements BlockInterface
      * @param ConsumerSessionResource $consumerSessionData
      * @return ResponseInterface|false
      * @throws ServiceException
-     * @throws \PayEx\Api\Client\Exception
+     * @throws \SwedbankPay\Api\Client\Exception
      */
     public function initiateConsumerSession(ConsumerSessionResource $consumerSessionData)
     {
@@ -150,7 +150,7 @@ class CheckinWidget extends Template implements BlockInterface
      * @return string|false
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws \PayEx\Api\Client\Exception
+     * @throws \SwedbankPay\Api\Client\Exception
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function getCheckinScript()

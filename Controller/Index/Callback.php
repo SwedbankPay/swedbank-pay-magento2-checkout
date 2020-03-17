@@ -13,12 +13,12 @@ use Magento\Framework\Event\Manager as EventManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
-use PayEx\Api\Client\Exception as ClientException;
-use PayEx\Api\Service\Payment\Transaction\Resource\Response\Data\TransactionObjectInterface;
-use PayEx\Api\Service\Payment\Transaction\Response\Data\TransactionInterface;
-use PayEx\Api\Service\Paymentorder\Request\GetCurrentPayment;
-use PayEx\Api\Service\Paymentorder\Resource\Response\Data\GetCurrentPaymentInterface;
-use PayEx\Api\Service\Request;
+use SwedbankPay\Api\Client\Exception as ClientException;
+use SwedbankPay\Api\Service\Payment\Transaction\Resource\Response\Data\TransactionObjectInterface;
+use SwedbankPay\Api\Service\Payment\Transaction\Response\Data\TransactionInterface;
+use SwedbankPay\Api\Service\Paymentorder\Request\GetCurrentPayment;
+use SwedbankPay\Api\Service\Paymentorder\Resource\Response\Data\GetCurrentPaymentInterface;
+use SwedbankPay\Api\Service\Request;
 use SwedbankPay\Core\Exception\ServiceException;
 use SwedbankPay\Core\Model\Service;
 use SwedbankPay\Core\Logger\Logger;
@@ -168,7 +168,7 @@ class Callback extends PaymentActionAbstract
                     $order->setStatus(MagentoOrder::STATE_PROCESSING);
                 }
 
-                $order->addCommentToStatusHistory($order->getStatus(), 'PayEx payment processed successfully.');
+                $order->addCommentToStatusHistory($order->getStatus(), 'SwedbankPay payment processed successfully.');
                 $this->magentoOrderRepo->save($order);
 
                 if (($paymentOrderData instanceof OrderInterface) && $paymentOrderData->getIntent() == 'Sale') {
@@ -176,7 +176,7 @@ class Callback extends PaymentActionAbstract
                 }
                 break;
             case 'Failed':
-                $this->orderHelper->cancelOrder($order, 'PayEx payment failed, cancelled order.');
+                $this->orderHelper->cancelOrder($order, 'SwedbankPay payment failed, cancelled order.');
                 break;
         }
 
