@@ -32,19 +32,21 @@ jobs:
 
     - name: Version stamp composer.json
       env:
-        MAJOR_MINOR_PATCH: ${{ steps.gitversion.outputs.majorMinorPatch }}
-        PRE_RELEASE_LABEL: ${{ steps.gitversion.outputs.preReleaseLabel }}
-        COMMIT_COUNT: ${{ steps.gitversion.outputs.commitCount }}
-        SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
-        COMPOSER_VERSION: $MAJOR_MINOR_PATCH$PRE_RELEASE_LABEL$COMMIT_COUNT
-        REPO: ${{ github.repository }}
-        ARCHIVE: ${REPO#SwedbankPay/}-${SEMVER}.zip
+        COMPOSER_VERSION: ${{ steps.gitversion.outputs.majorMinorPatch }}${{ steps.gitversion.outputs.preReleaseLabel }}${{ steps.gitversion.outputs.commitCount }}
       run: |
-        echo $ARCHIVE
+        echo $COMPOSER_VERSION
         jq ".version=\"$COMPOSER_VERSION\"" composer.json > composer.version.json # Add "version" property to composer.version.json
         mv composer.json composer.clean.json
         mv composer.version.json composer.json # Rename composer.version.json to composer.json
+
+    - name: Create ZIP archive
+      env:
+        SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
+      run: |
+        ARCHIVE=${GITHUB_REPOSITORY#SwedbankPay/}-${SEMVER}.zip
+        echo $ARCHIVE
         zip -r $ARCHIVE *
+        zip -d $ARCHIVE composer.clean.json # Remove composer.clean.json from the ZIP archive
         rm composer.json
         mv composer.clean.json composer.json # Move the version-less composer.json back in place so `composer validate` won't react on it in the script section.
 
