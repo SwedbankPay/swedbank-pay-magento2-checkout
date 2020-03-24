@@ -30,6 +30,24 @@ jobs:
       with:
         php-version: '7.2'
 
+    - name: Version stamp composer.json
+      env:
+        MAJOR_MINOR_PATCH: ${{ steps.gitversion.outputs.majorMinorPatch }}
+        PRE_RELEASE_LABEL: ${{ steps.gitversion.outputs.preReleaseLabel }}
+        COMMIT_COUNT: ${{ steps.gitversion.outputs.commitCount }}
+        SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
+        COMPOSER_VERSION: $MAJOR_MINOR_PATCH$PRE_RELEASE_LABEL$COMMIT_COUNT
+        REPO: ${{ github.repository }}
+        ARCHIVE: ${REPO#SwedbankPay/}-${SEMVER}.zip
+      run: |
+        echo $ARCHIVE
+        jq ".version=\"$COMPOSER_VERSION\"" composer.json > composer.version.json # Add "version" property to composer.version.json
+        mv composer.json composer.clean.json
+        mv composer.version.json composer.json # Rename composer.version.json to composer.json
+        zip -r $ARCHIVE *
+        rm composer.json
+        mv composer.clean.json composer.json # Move the version-less composer.json back in place so `composer validate` won't react on it in the script section.
+
     - name: Validate composer.json and composer.lock
       run: composer validate
 
