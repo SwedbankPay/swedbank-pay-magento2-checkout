@@ -1,5 +1,6 @@
 language: php
-sudo: false
+os: linux
+dist: xenial
 
 services:
 - docker
@@ -65,10 +66,9 @@ script:
 
 deploy:
   provider: releases
-  api_key:
+  token:
     secure: fRr01CZzUK+vRP0zCoy63dvdZMH+EnOzDE2J4JGfU20EbH40vODjd5EOPDjlQ/1483NTt+9NDKVqhLFO/ED+iQoyOQnqPm7hU8mmN5pNjInRZrHP3gWYox3U97MLPivLzAPvcgYuDu6pfUqd6YymSMMur/KOUe+mb+7jdG9FpUTeNSxCkvfVX9O1DQx+NV/bUI5EXW5fG9zRygygMwEVQgj/kELArDz50Nnpghm3g0mzPFxXy7G0KwoNM1PvpBava1SbWVvHNsdLfrWj9j9UNHiJ7+m3N+t5AnK+AjSlcoVVmTC/DiKI0YwG+GiYfDDPQ3+0VmpThX97rCdbA7y15hWnLcicuj+47o7kWKyI1Q2ry+/oAvYigELCLiAL1QCf052k8gFp4xipI8+jXuALNdGTpDdfxr22b0ZtMvTHeY8W1zhG92o8Uyz+/qbI9YkB74zElYtQZ+LXne/mD7CiZitXTUnwSIwqd8X2V3l0/yOgsuvygtDOZIzWX09ic/EZq61olMh+uBjctV+3twvbcRf1+vxXziGiM+E5e4khucN9gnihxJ9edkFOx8HpMmKV0++gjwaKObus0uTxbtL3Vs8GAHMMojF1HPwWpbBZd8KEdty/cHMbB41A8QNcTsG2pZ5b/pcytXgu0mEzcGZ+LC2SJCvXbA1YXC09jLKwbys=
   file: "$ARCHIVE"
   overwrite: true
-  skip_cleanup: true
   on:
     tags: true
