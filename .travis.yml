@@ -23,7 +23,6 @@ before_install:
 - git log --graph --format="%h %cr %d" --decorate --date=relative --all --remotes="*" -n 100
 
 install:
-- wget https://raw.githubusercontent.com/magento/marketplace-tools/master/validate_m2_package.php
 - export GITVERSION="gittools/gitversion:5.0.0-linux-debian-9-netcoreapp2.2"
 - docker pull $GITVERSION
 
@@ -48,8 +47,7 @@ before_script:
 - mv composer.clean.json composer.json # Move the version-less composer.json back in place so `composer validate` won't react on it in the script section.
 
 script:
-- php validate_m2_package.php -d $ARCHIVE
-- rm validate_m2_package.php
+- php ./vendor/validate_m2_package.php -d $ARCHIVE
 - |
   cat << EOF > auth.json
   {
