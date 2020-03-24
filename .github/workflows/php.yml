@@ -40,6 +40,14 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
+    - name: Cache dependencies
+      uses: actions/cache@v1
+      with:
+        path: ./vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
     - name: PHPCS Check
       run: ./vendor/bin/phpcs --standard=Magento2 --report=code --ignore=vendor/* --runtime-set ignore_warnings_on_exit true .
 
