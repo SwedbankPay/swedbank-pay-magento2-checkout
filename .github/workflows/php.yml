@@ -56,11 +56,8 @@ jobs:
         ARCHIVE=${GITHUB_REPOSITORY#SwedbankPay/}-${SEMVER}.zip
         echo "Archive: ${ARCHIVE}"
         echo "##[set-output name=archive_name;]${ARCHIVE}"
-        zip --recurse-paths --exclude="*.zip" --exclude="vendor/*" --exclude="composer.clean.json" $ARCHIVE *
-        unzip -l $ARCHIVE
-        zip --delete $ARCHIVE composer.clean.json || echo Unable to delete # Remove stuff that for whatever reason wasn't excluded when creating the archive
-        zip --delete $ARCHIVE $ARCHIVE || echo Unable to delete # Remove stuff that for whatever reason wasn't excluded when creating the archive
-        zip --delete $ARCHIVE vendor/validate_m2_package.php || echo Unable to delete # Remove stuff that for whatever reason wasn't excluded when creating the archive
+        zip --recurse-paths --exclude="*.zip" --exclude="vendor/*" --exclude="composer.clean.json" ${ARCHIVE} *
+        unzip -l ${ARCHIVE}
         rm composer.json
         mv composer.clean.json composer.json # Move the version-less composer.json back in place so `composer validate` won't react on it in the script section.
 
