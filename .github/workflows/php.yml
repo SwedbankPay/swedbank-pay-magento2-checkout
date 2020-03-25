@@ -61,6 +61,9 @@ jobs:
         name: ${{ steps.create_archive.outputs.archive_name }}
         path: ${{ steps.create_archive.outputs.archive_name }}
 
+    - name: Validate M2 Package
+      run: php ./vendor/validate_m2_package.php -d ${{ steps.create_archive.outputs.archive_name }}
+
     - name: Validate composer.json and composer.lock
       run: composer validate
 
