@@ -30,12 +30,21 @@ jobs:
       with:
         php-version: '7.2'
 
+    - name: Version variables for unstable builds
+      id: unstable
+      if: startsWith(github.ref, 'refs/tags/') != true
+      env:
+        LABEL: "-dev${{ steps.gitversion.outputs.commitsSinceVersionSourcePadded }}"
+      run: |
+        echo "Pre-release: ${LABEL}"
+        echo "##[set-output name=label;]${LABEL}"
+
     - name: Version stamp composer.json
       env:
-        COMPOSER_VERSION: ${{ steps.gitversion.outputs.majorMinorPatch }}${{ steps.gitversion.outputs.preReleaseLabel }}${{ steps.gitversion.outputs.commitCount }}
+        COMPOSER_VERSION: "${{ steps.gitversion.outputs.majorMinorPatch }}${{ steps.unstable.outputs.label }}"
       run: |
-        echo $COMPOSER_VERSION
-        jq ".version=\"$COMPOSER_VERSION\"" composer.json > composer.version.json # Add "version" property to composer.version.json
+        echo "Composer version: ${COMPOSER_VERSION}"
+        jq ".version=\"${COMPOSER_VERSION}\"" composer.json > composer.version.json # Add "version" property to composer.version.json
         mv composer.json composer.clean.json
         mv composer.version.json composer.json # Rename composer.version.json to composer.json
 
@@ -45,8 +54,8 @@ jobs:
         SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
       run: |
         ARCHIVE=${GITHUB_REPOSITORY#SwedbankPay/}-${SEMVER}.zip
-        echo $ARCHIVE
-        echo "##[set-output name=archive_name;]$ARCHIVE"
+        echo "Archive: ${ARCHIVE}"
+        echo "##[set-output name=archive_name;]${ARCHIVE}"
         zip --recurse-paths --exclude="*.zip" --exclude="vendor/*" --exclude="composer.clean.json" $ARCHIVE *
         unzip -l $ARCHIVE
         zip --delete $ARCHIVE composer.clean.json || echo Unable to delete # Remove stuff that for whatever reason wasn't excluded when creating the archive
