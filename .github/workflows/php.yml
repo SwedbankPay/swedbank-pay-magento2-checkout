@@ -40,15 +40,23 @@ jobs:
         mv composer.version.json composer.json # Rename composer.version.json to composer.json
 
     - name: Create ZIP archive
+      id: create_archive
       env:
         SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
       run: |
         ARCHIVE=${GITHUB_REPOSITORY#SwedbankPay/}-${SEMVER}.zip
         echo $ARCHIVE
+        echo "##[set-output name=archive_name;]$ARCHIVE"
         zip -r $ARCHIVE *
         zip -d $ARCHIVE composer.clean.json # Remove composer.clean.json from the ZIP archive
         rm composer.json
         mv composer.clean.json composer.json # Move the version-less composer.json back in place so `composer validate` won't react on it in the script section.
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ steps.create_archive.outputs.archive_name }}
+        path: ./
 
     - name: Validate composer.json and composer.lock
       run: composer validate
