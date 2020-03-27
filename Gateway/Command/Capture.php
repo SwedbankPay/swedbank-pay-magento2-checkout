@@ -18,14 +18,14 @@ use Magento\Sales\Model\Order\Invoice\Item as InvoiceItem;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Model\Calculation;
 use Magento\Tax\Model\Config as TaxConfig;
-use PayEx\Api\Client\Exception;
-use PayEx\Api\Service\Data\ResponseInterface;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\DescriptionItem;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\VatSummaryItem;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Collection\ItemDescriptionCollection;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Collection\VatSummaryCollection;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
+use SwedbankPay\Api\Client\Exception;
+use SwedbankPay\Api\Service\Data\ResponseInterface;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\DescriptionItem;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\VatSummaryItem;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\ItemDescriptionCollection;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\VatSummaryCollection;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
 use SwedbankPay\Core\Exception\ServiceException;
 use SwedbankPay\Core\Model\Service as ClientRequestService;
 use SwedbankPay\Core\Exception\SwedbankPayException;
@@ -243,7 +243,11 @@ class Capture extends AbstractCommand
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);
 
-        $captureRequest = $this->getRequestService('Paymentorder/Transaction', 'TransactionCapture', $transactionObject);
+        $captureRequest = $this->getRequestService(
+            'Paymentorder/Transaction',
+            'TransactionCapture',
+            $transactionObject
+        );
         $captureRequest->setRequestEndpointVars(
             $this->getSwedbankPayPaymentResourceId($paymentOrder->getPaymentOrderId())
         );

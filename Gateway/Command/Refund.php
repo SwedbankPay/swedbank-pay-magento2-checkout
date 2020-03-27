@@ -5,10 +5,10 @@ namespace SwedbankPay\Checkout\Gateway\Command;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use PayEx\Api\Client\Exception;
-use PayEx\Api\Service\Data\ResponseInterface;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
-use PayEx\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
+use SwedbankPay\Api\Client\Exception;
+use SwedbankPay\Api\Service\Data\ResponseInterface;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
+use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
 use SwedbankPay\Core\Exception\ServiceException;
 use SwedbankPay\Core\Model\Service as ClientRequestService;
 use SwedbankPay\Core\Exception\SwedbankPayException;
@@ -103,7 +103,11 @@ class Refund extends AbstractCommand
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);
 
-        $reversalRequest = $this->getRequestService('Paymentorder/Transaction', 'TransactionReversal', $transactionObject);
+        $reversalRequest = $this->getRequestService(
+            'Paymentorder/Transaction',
+            'TransactionReversal',
+            $transactionObject
+        );
         $reversalRequest->setRequestEndpointVars(
             $this->getSwedbankPayPaymentResourceId($paymentOrder->getPaymentOrderId())
         );

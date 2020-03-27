@@ -19,7 +19,7 @@ class ConsumerSession extends \Magento\Framework\Session\SessionManager
      */
     public function isInitiated($flag = null)
     {
-        if (!is_null($flag)) {
+        if ($flag) {
             $this->storage->setData(self::IS_INITIATED, $flag);
 
             return $this;
@@ -34,7 +34,7 @@ class ConsumerSession extends \Magento\Framework\Session\SessionManager
      */
     public function isIdentified($flag = null)
     {
-        if (!is_null($flag)) {
+        if ($flag) {
             $this->storage->setData(self::IS_IDENTIFIED, $flag);
 
             return $this;

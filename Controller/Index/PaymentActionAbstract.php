@@ -161,6 +161,7 @@ abstract class PaymentActionAbstract extends Action implements PaymentActionInte
         $eventMethodString = '';
 
         if (is_callable($this->getEventMethod())) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             switch (gettype($this->getEventMethod())) {
                 case 'string':
                     $eventMethodString = $this->getEventMethod();
@@ -208,6 +209,7 @@ abstract class PaymentActionAbstract extends Action implements PaymentActionInte
     {
         if (!$this->configHelper->isActive()) {
             $this->logger->error(
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 basename(get_class($this)) . ' trigger error: Module is not active'
             );
             return $this->setResult(
@@ -231,11 +233,13 @@ abstract class PaymentActionAbstract extends Action implements PaymentActionInte
             }
             $this->setEventArgs($eventArgs);
             $this->logger->debug(
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 basename(get_class($this)) . ' triggered',
                 ['eventArgs' => $eventArgs, 'requestBody' => (array)$requestBody]
             );
         } catch (Exception $exception) {
             $this->logger->error(
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 basename(get_class($this)) . ' trigger error: Missing arguments in request body',
                 [
                     'eventArgs' => (array) $this->getEventArgs(),
@@ -255,6 +259,7 @@ abstract class PaymentActionAbstract extends Action implements PaymentActionInte
             $errorMessage = '';
 
             try {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $result = $returnValue = call_user_func_array($this->getEventMethod(), $eventArgs);
                 if (is_scalar($result) && !is_string($result)) {
                     $result = $result ? 'success' : 'error';
@@ -266,6 +271,7 @@ abstract class PaymentActionAbstract extends Action implements PaymentActionInte
 
             if ($result == 'error') {
                 $this->logger->error(
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction
                     basename(get_class($this)) . ' trigger error: Failed to execute event method',
                     [
                         'eventMethod' => $this->getEventMethodString(),

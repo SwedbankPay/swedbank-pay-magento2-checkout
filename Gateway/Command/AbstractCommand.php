@@ -4,18 +4,18 @@ namespace SwedbankPay\Checkout\Gateway\Command;
 
 use Magento\Framework\Phrase;
 use Magento\Sales\Api\Data\OrderInterface;
-use PayEx\Api\Client\Exception;
-use PayEx\Api\Service\Data\RequestInterface;
-use PayEx\Api\Service\Data\ResponseInterface;
-use PayEx\Api\Service\Paymentorder\Request\GetPaymentorder as GetPaymentorderRequest;
-use PayEx\Api\Service\Resource\Collection\Item\OperationsItem;
+use SwedbankPay\Api\Client\Exception;
+use SwedbankPay\Api\Service\Data\RequestInterface;
+use SwedbankPay\Api\Service\Data\ResponseInterface;
+use SwedbankPay\Api\Service\Paymentorder\Request\GetPaymentorder as GetPaymentorderRequest;
+use SwedbankPay\Api\Service\Resource\Collection\Item\OperationsItem;
 use SwedbankPay\Core\Exception\ServiceException;
-use PayEx\Framework\AbstractDataTransferObject;
-use PayEx\Api\Service\Resource\Data\ResponseInterface as ResponseResourceInterface;
+use SwedbankPay\Framework\AbstractDataTransferObject;
+use SwedbankPay\Api\Service\Resource\Data\ResponseInterface as ResponseResourceInterface;
 use SwedbankPay\Core\Model\Service as ClientRequestService;
 use SwedbankPay\Core\Exception\SwedbankPayException;
 use SwedbankPay\Core\Logger\Logger;
-use PayEx\Framework\Data\DataObjectCollectionInterface;
+use SwedbankPay\Framework\Data\DataObjectCollectionInterface;
 use SwedbankPay\Checkout\Api\Data\OrderInterface as PaymentOrderInterface;
 use SwedbankPay\Checkout\Api\Data\QuoteInterface as PaymentQuoteInterface;
 use Magento\Framework\DataObject;
@@ -174,6 +174,7 @@ abstract class AbstractCommand extends DataObject implements CommandInterface
     protected function checkRemainingAmount($command, $amount, $mageOrder, $swedbankPayOrder)
     {
         $getMethod = 'getRemaining' . ucfirst($this->cmdTransActionMap[$command]) . 'Amount';
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $remainingAmount = (int)call_user_func([$swedbankPayOrder, $getMethod]);
 
         if ($remainingAmount >= ($amount * 100)) {
@@ -223,6 +224,7 @@ abstract class AbstractCommand extends DataObject implements CommandInterface
                 $command,
                 $mageOrder->getEntityId(),
                 $swedbankPayOrder->getPaymentOrderId(),
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 print_r($responseResource, true)
             )
         );
@@ -267,6 +269,7 @@ abstract class AbstractCommand extends DataObject implements CommandInterface
                         $command,
                         $mageOrder->getEntityId(),
                         $swedbankPayOrder->getPaymentOrderId(),
+                        // phpcs:ignore Magento2.Functions.DiscouragedFunction
                         print_r($responseData, true)
                     )
                 );
@@ -280,7 +283,6 @@ abstract class AbstractCommand extends DataObject implements CommandInterface
                         )
                     )
                 );
-                break;
         }
 
         return $status;

@@ -59,8 +59,7 @@ class QuoteRepositoryPlugin
 
             $this->quoteRepository->save($swedbankPayQuote);
         } catch (NoSuchEntityException $e) {
-            // No Quote Found
-            // Do Nothing
+            $this->logger->debug(sprintf('SwedbankPay Quote not found with ID # %s', $quote->getId()));
         }
     }
 }

@@ -56,7 +56,6 @@ class OnUpdated extends PaymentActionAbstract
         $this->setEventMethod([$this, 'updatePaymentOrder']);
     }
 
-
     /**
      * @return array|bool|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|string
      * @throws \Exception
@@ -67,9 +66,11 @@ class OnUpdated extends PaymentActionAbstract
 
         $paymentOrderObject = $this->paymentorderHelper->createPaymentorderObject($consumerProfileRef);
         $paymentOrderPurchase = $this->service->init('Paymentorder', 'purchase', $paymentOrderObject);
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $this->logger->debug(basename(__CLASS__) . ' triggered');
 
-        /** @var \PayEx\Api\Service\Data\ResponseInterface $response */
+        /** @var \SwedbankPay\Api\Service\Data\ResponseInterface $response */
         $response = $paymentOrderPurchase->send();
         $responseData = $response->getResponseData();
         $href = $response->getOperationByRel('view-paymentorder', 'href');
