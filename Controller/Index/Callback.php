@@ -167,7 +167,7 @@ class Callback extends PaymentActionAbstract
                     $order->setStatus(MagentoOrder::STATE_PROCESSING);
                 }
 
-                $order->addCommentToStatusHistory($order->getStatus(), 'SwedbankPay payment processed successfully.');
+                $order->addStatusToHistory($order->getStatus(), 'SwedbankPay payment processed successfully.');
                 $this->magentoOrderRepo->save($order);
 
                 if (($paymentOrderData instanceof OrderInterface) && $paymentOrderData->getIntent() == 'Sale') {
