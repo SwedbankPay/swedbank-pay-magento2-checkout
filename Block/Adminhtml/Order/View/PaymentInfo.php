@@ -43,27 +43,41 @@ class PaymentInfo extends Template
 
     /**
      * @return array|null
-     * @throws Exception
-     * @throws ServiceException
-     * @throws NoSuchEntityException
      */
     public function getCurrentPayment()
     {
-        /** @var GetCurrentPayment $serviceRequest */
-        $serviceRequest = $this->service->init('Paymentorder', 'GetCurrentPayment');
+        if (!$this->getCurrentPaymentId()) {
+            return null;
+        }
+
+        try {
+            /** @var GetCurrentPayment $serviceRequest */
+            $serviceRequest = $this->service->init('Paymentorder', 'GetCurrentPayment');
+        } catch (ServiceException $e) {
+            return null;
+        }
+
         $serviceRequest->setRequestEndpoint('/psp/paymentorders/' . $this->getCurrentPaymentId() . '/currentpayment');
 
-        return $serviceRequest->send()->getResponseData();
+        try {
+            return $serviceRequest->send()->getResponseData();
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
     /**
      * @return string
-     * @throws NoSuchEntityException
      */
     public function getCurrentPaymentId()
     {
         $orderId = $this->getRequest()->getParam('order_id');
-        $paymentOrderData = $this->paymentOrderRepo->getByOrderId($orderId);
+
+        try {
+            $paymentOrderData = $this->paymentOrderRepo->getByOrderId($orderId);
+        } catch (NoSuchEntityException $e) {
+            return null;
+        }
 
         return $paymentOrderData->getPaymentOrderId();
     }

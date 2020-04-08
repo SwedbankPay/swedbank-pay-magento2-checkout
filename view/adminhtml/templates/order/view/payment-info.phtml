@@ -1,9 +1,14 @@
 <?php
 /** @var \SwedbankPay\Checkout\Block\Adminhtml\Order\View\PaymentInfo $this */
+
+/** @var array|null $currentPayment */
+$currentPayment = $this->getCurrentPayment();
 ?>
 
 <br />
+<?php if ($currentPayment): ?>
 <p>
     <strong>SwedbankPay Payment Order ID:</strong> <?php echo $this->getCurrentPaymentId(); ?><br />
-    <strong>SwedbankPay Payment Instrument:</strong> <?php echo $this->getCurrentPayment()['menu_element_name']; ?>
+    <strong>SwedbankPay Payment Instrument:</strong> <?php echo $currentPayment['menu_element_name']; ?>
 </p>
+<?php endif; ?>
