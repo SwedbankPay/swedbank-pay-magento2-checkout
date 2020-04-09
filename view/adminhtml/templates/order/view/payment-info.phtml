@@ -4,6 +4,11 @@
 
 <br />
 <p>
-    <strong>SwedbankPay Payment Order ID:</strong> <?php echo $this->getCurrentPaymentId(); ?><br />
-    <strong>SwedbankPay Payment Instrument:</strong> <?php echo $this->getCurrentPayment()['menu_element_name']; ?>
+    <?php if ($this->getCurrentPaymentId()): ?>
+        <strong>SwedbankPay Payment Order ID:</strong> <?php echo $this->getCurrentPaymentId(); ?><br />
+    <?php endif; ?>
+
+    <?php if ($this->getCurrentPaymentInstrument()): ?>
+        <strong>SwedbankPay Payment Instrument:</strong> <?php echo $this->getCurrentPaymentInstrument(); ?>
+    <?php endif; ?>
 </p>
