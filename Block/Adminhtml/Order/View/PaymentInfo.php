@@ -67,7 +67,7 @@ class PaymentInfo extends Template
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getCurrentPaymentId()
     {
@@ -80,5 +80,19 @@ class PaymentInfo extends Template
         }
 
         return $paymentOrderData->getPaymentOrderId();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrentPaymentInstrument()
+    {
+        $currentPayment = $this->getCurrentPayment();
+
+        if ($currentPayment && array_key_exists('menu_element_name', $currentPayment)) {
+            return $currentPayment['menu_element_name'];
+        }
+
+        return null;
     }
 }
