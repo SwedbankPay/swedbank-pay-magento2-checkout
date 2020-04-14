@@ -183,7 +183,7 @@ class Capture extends AbstractCommand
                 ->setDescription($description);
             $itemDescriptions->addItem($descriptionItem);
 
-            $rate = (int)$item->getOrderItem()->getTaxPercent();
+            $rate = (int)$item->getOrderItem()->getTaxPercent() * 100;
 
             if (!isset($vatSummaryRateAmounts[$rate])) {
                 $vatSummaryRateAmounts[$rate] = ['amount' => 0, 'vat_amount' => 0];
@@ -212,7 +212,7 @@ class Capture extends AbstractCommand
                 ->setDescription($description);
             $itemDescriptions->addItem($descriptionItem);
 
-            $rate = (int)$this->getTaxRate($order);
+            $rate = (int)$this->getTaxRate($order) * 100;
 
             if (!isset($vatSummaryRateAmounts[$rate])) {
                 $vatSummaryRateAmounts[$rate] = ['amount' => 0, 'vat_amount' => 0];
