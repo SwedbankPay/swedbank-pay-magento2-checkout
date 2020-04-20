@@ -102,26 +102,20 @@ jobs:
     - name: PHPCS Check
       run: ./vendor/bin/phpcs --standard=Magento2 --report=code --ignore=vendor/* --runtime-set ignore_warnings_on_exit true .
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Pre-release
+      uses: marvinpinto/action-automatic-releases@v1.0.0
+      if: startsWith(github.ref, 'refs/heads/master')
       with:
-        tag_name: ${{ steps.composer-version.outputs.version }}
-        release_name: ${{ steps.composer-version.outputs.version }}
-        draft: false
-        prerelease: false
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        automatic_release_tag: latest
+        prerelease: true
+        title: Development Build
+        files: ${{ steps.archive.outputs.name }}
 
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
+    - name: Stable release
+      uses: marvinpinto/action-automatic-releases@v1.0.0
       if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.archive.outputs.name }}
-        asset_name: ${{ steps.archive.outputs.name }}
-        asset_content_type: application/zip
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        prerelease: false
+        files: ${{ steps.archive.outputs.name }}
