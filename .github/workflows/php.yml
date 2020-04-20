@@ -39,13 +39,14 @@ jobs:
         LABEL: "-dev${{ steps.gitversion.outputs.commitsSinceVersionSourcePadded }}"
       run: |
         echo "Pre-release: ${LABEL}"
-        echo "##[set-output name=label;]${LABEL}"
+        echo "::set-output name=label::${LABEL}"
 
     - name: Version stamp composer.json
-      env:
-        COMPOSER_VERSION: "${{ steps.gitversion.outputs.majorMinorPatch }}${{ steps.unstable.outputs.label }}"
+      id: composer-version
       run: |
+        COMPOSER_VERSION="${{ steps.gitversion.outputs.majorMinorPatch }}${{ steps.unstable.outputs.label }}"
         echo "Composer version: ${COMPOSER_VERSION}"
+        echo "::set-output name=version::${COMPOSER_VERSION}"
         jq ".version=\"${COMPOSER_VERSION}\"" composer.json > composer.version.json # Add "version" property to composer.version.json
         mv composer.json composer.clean.json
         mv composer.version.json composer.json # Rename composer.version.json to composer.json
@@ -57,7 +58,7 @@ jobs:
       run: |
         ARCHIVE=${GITHUB_REPOSITORY#SwedbankPay/}-${SEMVER}.zip
         echo "Archive: ${ARCHIVE}"
-        echo "##[set-output name=archive_name;]${ARCHIVE}"
+        echo "::set-output name=archive_name::${ARCHIVE}"
         zip --recurse-paths --exclude="*.zip" --exclude="vendor/*" --exclude="composer.clean.json" ${ARCHIVE} *
         unzip -l ${ARCHIVE}
         rm composer.json
@@ -108,8 +109,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ steps.composer-version.outputs.version }}
+        release_name: ${{ steps.composer-version.outputs.version }}
         draft: false
         prerelease: false
 
