@@ -52,13 +52,13 @@ jobs:
         mv composer.version.json composer.json # Rename composer.version.json to composer.json
 
     - name: Create ZIP archive
-      id: create_archive
+      id: archive
       env:
         SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
       run: |
         ARCHIVE=${GITHUB_REPOSITORY#SwedbankPay/}-${SEMVER}.zip
         echo "Archive: ${ARCHIVE}"
-        echo "::set-output name=archive_name::${ARCHIVE}"
+        echo "::set-output name=name::${ARCHIVE}"
         zip --recurse-paths --exclude="*.zip" --exclude="vendor/*" --exclude="composer.clean.json" ${ARCHIVE} *
         unzip -l ${ARCHIVE}
         rm composer.json
@@ -67,11 +67,11 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2-preview
       with:
-        name: ${{ steps.create_archive.outputs.archive_name }}
-        path: ${{ steps.create_archive.outputs.archive_name }}
+        name: ${{ steps.archive.outputs.name }}
+        path: ${{ steps.archive.outputs.name }}
 
     - name: Validate M2 Package
-      run: php ./vendor/validate_m2_package.php -d ${{ steps.create_archive.outputs.archive_name }}
+      run: php ./vendor/validate_m2_package.php -d ${{ steps.archive.outputs.name }}
 
     - name: Validate composer.json and composer.lock
       run: composer validate
@@ -122,6 +122,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.create_archive.outputs.archive_name }}
-        asset_name: ${{ steps.create_archive.outputs.archive_name }}
+        asset_path: ${{ steps.archive.outputs.name }}
+        asset_name: ${{ steps.archive.outputs.name }}
         asset_content_type: application/zip
