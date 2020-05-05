@@ -118,5 +118,6 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{ steps.archive.outputs.name }}
+        asset_name: ${{ steps.archive.outputs.name }}
         tag: ${{ github.ref }}
         overwrite: true
