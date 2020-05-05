@@ -6,7 +6,7 @@
         "name": "Swedbank Pay",
         "email": "opensource@swedbankpay.com"
     }],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "swedbank-pay/magento2-checkout": "*"
     },
