@@ -8,7 +8,7 @@
     }],
     "minimum-stability": "stable",
     "require": {
-        "swedbank-pay/magento2-checkout": "*"
+        "swedbank-pay/magento2-checkout": "dev-master"
     },
     "repositories": {
         "magento": {
