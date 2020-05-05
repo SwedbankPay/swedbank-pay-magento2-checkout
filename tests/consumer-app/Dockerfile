@@ -1,4 +1,4 @@
-FROM prooph/composer:7.3
+FROM prooph/composer:7.2
 
 ARG MAGENTO_PUBLIC_KEY
 ARG MAGENTO_PRIVATE_KEY
