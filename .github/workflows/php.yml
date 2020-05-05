@@ -99,11 +99,6 @@ jobs:
     - name: Composer install
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Composer require
-      env:
-        COMPOSER_VERSION: ${{ steps.composer-version.outputs.version }}
-      run: composer require swedbank-pay/magento2-checkout:${COMPOSER_VERSION}
-
     - name: PHPCS Check
       run: ./vendor/bin/phpcs --standard=Magento2 --report=code --ignore=vendor/* --runtime-set ignore_warnings_on_exit true .
 

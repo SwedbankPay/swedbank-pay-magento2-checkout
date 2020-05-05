@@ -1,0 +1,33 @@
+name: Integration tests
+
+on:
+  push:
+    branches:
+    - '*'
+    tags:
+    - '*'
+  pull_request:
+
+jobs:
+  test:
+    name: Composer require
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Docker build
+      run: |
+        docker build \
+          --tag swedbankpay/magento2-checkout:latest \
+          --build-arg MAGENTO_PUBLIC_KEY=${{ secrets.MAGENTO_PUBLIC_KEY }} \
+          --build-arg MAGENTO_PRIVATE_KEY=${{ secrets.MAGENTO_PRIVATE_KEY }} \
+          . \
+          --file tests/consumer-app/Dockerfile
+
+    - name: Docker run
+      run: |
+          docker run \
+          --rm \
+          --volume $(pwd):/plugin \
+          swedbankpay/magento2-checkout:latest\
