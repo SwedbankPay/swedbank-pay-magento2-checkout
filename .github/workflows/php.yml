@@ -73,7 +73,7 @@ jobs:
     - name: Validate M2 Package
       run: php ./vendor/validate_m2_package.php -d ${{ steps.archive.outputs.name }}
 
-    - name: Validate composer.json and composer.lock
+    - name: Composer validate
       run: composer validate
 
     - name: Add auth.json
@@ -96,8 +96,13 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: ${{ runner.os }}-php-
 
-    - name: Install dependencies
+    - name: Composer install
       run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Composer require
+      env:
+        COMPOSER_VERSION: ${{ steps.composer-version.outputs.version }}
+      run: composer require swedbank-pay/magento2-checkout:${COMPOSER_VERSION}
 
     - name: PHPCS Check
       run: ./vendor/bin/phpcs --standard=Magento2 --report=code --ignore=vendor/* --runtime-set ignore_warnings_on_exit true .
