@@ -175,6 +175,7 @@ class Capture extends AbstractCommand
                     PriceCurrencyInterface::DEFAULT_PRECISION,
                     $order->getStoreId()
                 );
+                $formattedDiscountAmount = preg_replace('/\xc2\xa0/', ' ', $formattedDiscountAmount);
                 $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
             }
 
@@ -204,6 +205,7 @@ class Capture extends AbstractCommand
                     PriceCurrencyInterface::DEFAULT_PRECISION,
                     $order->getStoreId()
                 );
+                $formattedDiscountAmount = preg_replace('/\xc2\xa0/', ' ', $formattedDiscountAmount);
                 $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
             }
 
