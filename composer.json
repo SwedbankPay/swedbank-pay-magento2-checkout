@@ -43,13 +43,14 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "~7.0",
+    "phpunit/phpunit": "^7.5",
     "squizlabs/php_codesniffer": "*",
     "magento/magento-coding-standard": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
+    "test": "phpunit ./Test/",
     "post-install-cmd": [
       "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
     ],
