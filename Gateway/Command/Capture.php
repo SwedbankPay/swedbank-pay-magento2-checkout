@@ -175,7 +175,7 @@ class Capture extends AbstractCommand
                     PriceCurrencyInterface::DEFAULT_PRECISION,
                     $order->getStoreId()
                 );
-                $formattedDiscountAmount = preg_replace('/\xc2\xa0/', ' ', $formattedDiscountAmount);
+                $formattedDiscountAmount = $this->removeInvalidCharacters($formattedDiscountAmount);
                 $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
             }
 
@@ -205,7 +205,7 @@ class Capture extends AbstractCommand
                     PriceCurrencyInterface::DEFAULT_PRECISION,
                     $order->getStoreId()
                 );
-                $formattedDiscountAmount = preg_replace('/\xc2\xa0/', ' ', $formattedDiscountAmount);
+                $formattedDiscountAmount = $this->removeInvalidCharacters($formattedDiscountAmount);
                 $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
             }
 
@@ -308,5 +308,20 @@ class Capture extends AbstractCommand
         );
 
         return $this->calculator->getRate($request->setProductClassId($taxRateId));
+    }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    public function removeInvalidCharacters($str)
+    {
+        // Removes invalid characters
+        $str = preg_replace('/[\x00-\x1F\x7F]/u', '', $str);
+
+        // Removes non-breaking spaces
+        $str = preg_replace('/[\xa0]/u', ' ', $str);
+
+        return $str;
     }
 }
