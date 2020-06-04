@@ -51,6 +51,7 @@
   "prefer-stable": true,
   "scripts": {
     "test": "phpunit ./Test/",
+    "phpcs": "./vendor/bin/phpcs --standard=Magento2 --report=code --ignore=vendor/* --runtime-set ignore_warnings_on_exit true .",
     "post-install-cmd": [
       "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
     ],
