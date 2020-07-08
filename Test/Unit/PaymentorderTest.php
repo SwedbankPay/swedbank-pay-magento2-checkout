@@ -7,6 +7,8 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Cms\Helper\Page as PageHelper;
 use Magento\Directory\Model\Currency;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
 use Magento\Quote\Model\Quote;
@@ -18,7 +20,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SwedbankPay\Api\Client\Client as ApiClient;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\ItemsCollection;
-use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\PaymentorderItemsCollection;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCampaignInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderObject;
@@ -29,9 +30,11 @@ use SwedbankPay\Checkout\Helper\Paymentorder;
 use SwedbankPay\Checkout\Model\QuoteFactory;
 use SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository;
 use SwedbankPay\Core\Helper\Config as ClientConfig;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 
+
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PaymentorderTest extends TestCase
 {
     /**
@@ -187,13 +190,6 @@ class PaymentorderTest extends TestCase
         $payeeInfo = $this->paymentorder->createPayeeInfoObject();
 
         $this->assertInstanceOf(PaymentorderPayeeInfo::class, $payeeInfo);
-    }
-
-    public function testCreateItemsObjectInstance()
-    {
-        $paymentorderItems = $this->paymentorder->createItemsObject();
-
-        $this->assertInstanceOf(PaymentorderItemsCollection::class, $paymentorderItems);
     }
 
     public function testCreateInvoiceObjectInstance()
