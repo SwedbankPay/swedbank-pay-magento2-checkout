@@ -20,8 +20,6 @@ use SwedbankPay\Core\Model\Service;
 use SwedbankPay\Core\Logger\Logger;
 
 /**
- * Class OnBillingDetailsAvailable
- *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */

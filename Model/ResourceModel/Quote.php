@@ -5,8 +5,6 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 
 /**
- * Class Quote
- *
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 class Quote extends AbstractDb

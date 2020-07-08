@@ -33,8 +33,6 @@ use SwedbankPay\Core\Logger\Logger;
 use SwedbankPay\Checkout\Helper\PaymentData;
 
 /**
- * Class Capture
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */

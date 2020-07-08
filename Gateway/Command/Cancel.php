@@ -21,8 +21,6 @@ use Magento\Framework\App\RequestInterface;
 use SwedbankPay\Checkout\Helper\PaymentData;
 
 /**
- * Class Cancel
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Cancel extends AbstractCommand
