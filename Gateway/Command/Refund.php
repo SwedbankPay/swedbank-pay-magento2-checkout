@@ -19,11 +19,6 @@ use Magento\Payment\Gateway\Command;
 use Magento\Framework\App\RequestInterface;
 use SwedbankPay\Checkout\Helper\PaymentData;
 
-/**
- * Class Refund
- *
- * @package SwedbankPay\Checkout\Gateway\Command
- */
 class Refund extends AbstractCommand
 {
     /**

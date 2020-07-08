@@ -14,11 +14,6 @@ use Magento\Sales\Model\Order;
 use SwedbankPay\Checkout\Helper\Config as PaymentMenuConfig;
 use SwedbankPay\Checkout\Helper\PaymentData;
 
-/**
- * Class Initialize
- *
- * @package SwedbankPay\Checkout\Gateway\Command
- */
 class Initialize extends AbstractCommand
 {
     const TYPE_AUTH = 'authorization';

@@ -2,9 +2,6 @@
 
 namespace SwedbankPay\Checkout\Gateway\Config;
 
-/**
- * Class Config
- */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
     const KEY_ACTIVE = 'active';

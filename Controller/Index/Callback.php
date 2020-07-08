@@ -30,8 +30,6 @@ use SwedbankPay\Checkout\Helper\PaymentData as PaymentDataHelper;
 use SwedbankPay\Checkout\Helper\Paymentorder as PaymentorderHelper;
 
 /**
- * Class Callback
- *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */

@@ -3,21 +3,21 @@
 namespace SwedbankPay\Checkout\Helper;
 
 use Exception;
-use Magento\Braintree\Model\LocaleResolver;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Cms\Helper\Page as PageHelper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
+use Magento\Quote\Model\Quote as MageQuote;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
-use Magento\Theme\Block\Html\Header\Logo as HeaderLogo;
-use Magento\Quote\Model\Quote as MageQuote;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Theme\Block\Html\Header\Logo as HeaderLogo;
 use SwedbankPay\Api\Client\Client as ApiClient;
-use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\ItemsCollection;
+use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\PaymentorderItemsCollection;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCampaignInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCreditCard;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderInvoice;
@@ -27,14 +27,12 @@ use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderPayer;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderSwish;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderUrl;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Request\Paymentorder as PaymentorderRequestResource;
-use SwedbankPay\Core\Helper\Config as ClientConfig;
 use SwedbankPay\Checkout\Helper\Config as PaymentMenuConfig;
 use SwedbankPay\Checkout\Model\QuoteFactory;
 use SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository;
+use SwedbankPay\Core\Helper\Config as ClientConfig;
 
 /**
- * Class Paymentorder
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
@@ -110,7 +108,7 @@ class Paymentorder
         ClientConfig $clientConfig,
         PaymentMenuConfig $paymentMenuConfig,
         ScopeConfigInterface $scopeConfig,
-        LocaleResolver $localeResolver,
+        Resolver $localeResolver,
         QuoteFactory $quoteFactory,
         QuoteRepository $quoteRepository
     ) {
@@ -134,6 +132,7 @@ class Paymentorder
      * @param string|null $consumerProfileRef
      * @return PaymentorderObject
      * @throws NoSuchEntityException
+     * @throws LocalizedException
      */
     public function createPaymentorderObject($consumerProfileRef = null)
     {
@@ -181,7 +180,7 @@ class Paymentorder
             ->setUrls($urlData)
             ->setPayeeInfo($payeeInfo);
 
-        if (isset($paymentorderItems) && ($paymentorderItems instanceof ItemsCollection)) {
+        if (isset($paymentorderItems) && ($paymentorderItems instanceof PaymentorderItemsCollection)) {
             $paymentOrder->setItems($paymentorderItems);
         }
 
@@ -241,7 +240,7 @@ class Paymentorder
     }
 
     /**
-     * @return ItemsCollection|null
+     * @return PaymentorderItemsCollection|null
      * @SuppressWarnings(PHPMD.IfStatementAssignment)
      */
     public function createItemsObject()
@@ -268,7 +267,7 @@ class Paymentorder
             return null;
         }
 
-        $paymentorderItems = new ItemsCollection();
+        $paymentorderItems = new PaymentorderItemsCollection();
         $paymentorderItems->addItem($item);
 
         return $paymentorderItems;

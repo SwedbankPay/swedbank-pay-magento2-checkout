@@ -18,8 +18,6 @@ use SwedbankPay\Core\Model\Service;
 use SwedbankPay\Core\Logger\Logger;
 
 /**
- * Class OnShippingDetailsAvailable
- *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */

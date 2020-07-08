@@ -7,9 +7,6 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
 use SwedbankPay\Checkout\Helper\Config;
 
-/**
- * Class AdditionalConfigVars
- */
 class AdditionalConfigVars implements ConfigProviderInterface
 {
     /**

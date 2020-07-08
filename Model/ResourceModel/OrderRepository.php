@@ -19,8 +19,6 @@ use SwedbankPay\Checkout\Model\ResourceModel\Order\Collection as OrderCollection
 use SwedbankPay\Checkout\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 
 /**
- * Class OrderRepository
- *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
