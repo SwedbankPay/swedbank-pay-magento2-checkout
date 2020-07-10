@@ -26,6 +26,7 @@ use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\ItemDes
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\VatSummaryCollection;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
+use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
 use SwedbankPay\Core\Exception\ServiceException;
 use SwedbankPay\Core\Model\Service as ClientRequestService;
 use SwedbankPay\Core\Exception\SwedbankPayException;
@@ -74,6 +75,16 @@ class Capture extends AbstractCommand
     protected $mageOrderRepo;
 
     /**
+     * @var QuoteRe
+     */
+    protected $mageQuoteRepo;
+
+    /**
+     * @var OrderItemsFactory
+     */
+    protected $orderItemsFactory;
+
+    /**
      * Capture constructor.
      *
      * @param ClientRequestService $requestService
@@ -84,6 +95,7 @@ class Capture extends AbstractCommand
      * @param Calculation $calculator
      * @param PriceCurrencyInterface $priceCurrency
      * @param OrderRepositoryInterface $mageOrderRepo
+     * @param OrderItemsFactory $orderItemsFactory
      * @param Logger $logger
      * @param array $data
      */
@@ -96,6 +108,7 @@ class Capture extends AbstractCommand
         Calculation $calculator,
         PriceCurrencyInterface $priceCurrency,
         OrderRepositoryInterface $mageOrderRepo,
+        OrderItemsFactory $orderItemsFactory,
         Logger $logger,
         array $data = []
     ) {
@@ -112,6 +125,7 @@ class Capture extends AbstractCommand
         $this->calculator = $calculator;
         $this->priceCurrency = $priceCurrency;
         $this->mageOrderRepo = $mageOrderRepo;
+        $this->orderItemsFactory = $orderItemsFactory;
     }
 
     /**
@@ -140,14 +154,6 @@ class Capture extends AbstractCommand
         /** @var MageOrder $order */
         $order = $payment->getOrder();
 
-        $invoices = $order->getInvoiceCollection();
-
-        /**
-         * The latest invoice will contain only the selected items(and quantities) for the (partial) capture
-         * @var Invoice $invoice
-         */
-        $invoice = $invoices->getLastItem();
-
         $paymentOrder = $this->paymentData->getByOrder($order);
 
         $this->checkRemainingAmount('capture', $amount, $order, $paymentOrder);
@@ -158,87 +164,14 @@ class Capture extends AbstractCommand
             return null;
         }
 
-        $itemDescriptions = new ItemDescriptionCollection();
-        $vatSummaryRateAmounts = [];
-
-        /** @var InvoiceItem $item */
-        foreach ($invoice->getItemsCollection() as $item) {
-            $itemTotal = ($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) * 100;
-
-            $description = (string)$item->getName();
-            if ($item->getBaseDiscountAmount()) {
-                $formattedDiscountAmount = $this->priceCurrency->format(
-                    $item->getBaseDiscountAmount(),
-                    false,
-                    PriceCurrencyInterface::DEFAULT_PRECISION,
-                    $order->getStoreId()
-                );
-                $formattedDiscountAmount = $this->removeInvalidCharacters($formattedDiscountAmount);
-                $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
-            }
-
-            $descriptionItem = new DescriptionItem();
-            $descriptionItem->setAmount($itemTotal)
-                ->setDescription($description);
-            $itemDescriptions->addItem($descriptionItem);
-
-            $rate = (int)$item->getOrderItem()->getTaxPercent() * 100;
-
-            if (!isset($vatSummaryRateAmounts[$rate])) {
-                $vatSummaryRateAmounts[$rate] = ['amount' => 0, 'vat_amount' => 0];
-            }
-
-            $vatSummaryRateAmounts[$rate]['amount'] += $itemTotal;
-            $vatSummaryRateAmounts[$rate]['vat_amount'] += $item->getBaseTaxAmount() * 100;
-        }
-
-        if (!$order->getIsVirtual() && $order->getBaseShippingInclTax() > 0) {
-            $shippingTotal = ($order->getBaseShippingInclTax() - $order->getBaseShippingDiscountAmount()) * 100;
-
-            $description = (string)$order->getShippingDescription();
-            if ($order->getBaseShippingDiscountAmount()) {
-                $formattedDiscountAmount = $this->priceCurrency->format(
-                    $order->getBaseShippingDiscountAmount(),
-                    false,
-                    PriceCurrencyInterface::DEFAULT_PRECISION,
-                    $order->getStoreId()
-                );
-                $formattedDiscountAmount = $this->removeInvalidCharacters($formattedDiscountAmount);
-                $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
-            }
-
-            $descriptionItem = new DescriptionItem();
-            $descriptionItem->setAmount($shippingTotal)
-                ->setDescription($description);
-            $itemDescriptions->addItem($descriptionItem);
-
-            $rate = (int)$this->getTaxRate($order) * 100;
-
-            if (!isset($vatSummaryRateAmounts[$rate])) {
-                $vatSummaryRateAmounts[$rate] = ['amount' => 0, 'vat_amount' => 0];
-            }
-
-            $vatSummaryRateAmounts[$rate]['amount'] += $shippingTotal;
-            $vatSummaryRateAmounts[$rate]['vat_amount'] += $order->getBaseShippingTaxAmount() * 100;
-        }
-
-        $vatSummaries = new VatSummaryCollection();
-
-        foreach ($vatSummaryRateAmounts as $rate => $amounts) {
-            $vatSummary = new VatSummaryItem();
-            $vatSummary->setAmount($amounts['amount'])
-                ->setVatAmount($amounts['vat_amount'])
-                ->setVatPercent($rate);
-            $vatSummaries->addItem($vatSummary);
-        }
+        $orderItems = $this->orderItemsFactory->createByOrder($order);
 
         $transaction = new Transaction();
         $transaction->setDescription("Capturing the authorized payment")
             ->setAmount($amount * 100)
             ->setVatAmount($order->getBaseTaxAmount() * 100)
             ->setPayeeReference($this->generateRandomString(30))
-            ->setItemDescriptions($itemDescriptions)
-            ->setVatSummary($vatSummaries);
+            ->setOrderItems($orderItems);
 
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);

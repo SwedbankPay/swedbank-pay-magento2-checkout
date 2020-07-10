@@ -17,6 +17,7 @@ use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Theme\Block\Html\Header\Logo as HeaderLogo;
 use SwedbankPay\Api\Client\Client as ApiClient;
+use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\OrderItemsCollection;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\PaymentorderItemsCollection;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCampaignInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCreditCard;
@@ -28,6 +29,7 @@ use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderSwish;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderUrl;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Request\Paymentorder as PaymentorderRequestResource;
 use SwedbankPay\Checkout\Helper\Config as PaymentMenuConfig;
+use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
 use SwedbankPay\Checkout\Model\QuoteFactory;
 use SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository;
 use SwedbankPay\Core\Helper\Config as ClientConfig;
@@ -35,6 +37,7 @@ use SwedbankPay\Core\Helper\Config as ClientConfig;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Paymentorder
 {
@@ -98,6 +101,11 @@ class Paymentorder
      */
     protected $quoteRepository;
 
+    /**
+     * @var OrderItemsFactory
+     */
+    protected $orderItemsFactory;
+
     public function __construct(
         CheckoutSession $checkoutSession,
         StoreManagerInterface $storeManager,
@@ -110,7 +118,8 @@ class Paymentorder
         ScopeConfigInterface $scopeConfig,
         Resolver $localeResolver,
         QuoteFactory $quoteFactory,
-        QuoteRepository $quoteRepository
+        QuoteRepository $quoteRepository,
+        OrderItemsFactory $orderItemsFactory
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->storeManager = $storeManager;
@@ -124,6 +133,7 @@ class Paymentorder
         $this->localeResolver = $localeResolver;
         $this->quoteFactory = $quoteFactory;
         $this->quoteRepository = $quoteRepository;
+        $this->orderItemsFactory = $orderItemsFactory;
     }
 
     /**
@@ -155,6 +165,7 @@ class Paymentorder
 
         $urlData = $this->createUrlObject();
         $payeeInfo = $this->createPayeeInfoObject();
+        $orderItems = $this->createOrderItemsObject($mageQuote);
 
         /**
          * Optional payment method specific stuff
@@ -178,7 +189,8 @@ class Paymentorder
             ->setGeneratePaymentToken(false)
             ->setDisablePaymentMenu(false)
             ->setUrls($urlData)
-            ->setPayeeInfo($payeeInfo);
+            ->setPayeeInfo($payeeInfo)
+            ->setOrderItems($orderItems);
 
         if (isset($paymentorderItems) && ($paymentorderItems instanceof PaymentorderItemsCollection)) {
             $paymentOrder->setItems($paymentorderItems);
@@ -237,6 +249,15 @@ class Paymentorder
             ->setPayeeReference($this->generateRandomString(30));
 
         return $payeeInfo;
+    }
+
+    /**
+     * @param MageQuote $quote
+     * @return OrderItemsCollection
+     */
+    public function createOrderItemsObject(MageQuote $quote)
+    {
+        return $this->orderItemsFactory->create($quote);
     }
 
     /**
