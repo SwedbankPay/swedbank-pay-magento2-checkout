@@ -20,17 +20,18 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SwedbankPay\Api\Client\Client as ApiClient;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\ItemsCollection;
+use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\OrderItemsCollection;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCampaignInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderObject;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderPayeeInfo;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderSwish;
 use SwedbankPay\Checkout\Helper\Config as PaymentMenuConfig;
+use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
 use SwedbankPay\Checkout\Helper\Paymentorder;
 use SwedbankPay\Checkout\Model\QuoteFactory;
 use SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository;
 use SwedbankPay\Core\Helper\Config as ClientConfig;
-
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -107,11 +108,18 @@ class PaymentorderTest extends TestCase
      */
     protected $quoteRepository;
 
+    /**
+     * @var OrderItemsFactory|MockObject
+     */
+    protected $orderItemsFactory;
+
     public function setUp()
     {
         $this->quote = $this->getMockBuilder(Quote::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getGrandTotal', 'getBillingAddress', 'getShippingAddress', 'isVirtual'])
+            ->setMethods([
+                'getGrandTotal', 'getBillingAddress', 'getShippingAddress', 'isVirtual', 'getAllVisibleItems'
+            ])
             ->getMock();
 
         $this->checkoutSession = $this->createMock(CheckoutSession::class);
@@ -128,6 +136,7 @@ class PaymentorderTest extends TestCase
         $this->localeResolver = $this->createMock(Resolver::class);
         $this->quoteFactory = $this->getMockBuilder('SwedbankPay\Checkout\Model\QuoteFactory')->getMock();
         $this->quoteRepository = $this->createMock(QuoteRepository::class);
+        $this->orderItemsFactory = $this->createMock(OrderItemsFactory::class);
 
         $this->paymentorder = new Paymentorder(
             $this->checkoutSession,
@@ -141,7 +150,8 @@ class PaymentorderTest extends TestCase
             $this->scopeConfig,
             $this->localeResolver,
             $this->quoteFactory,
-            $this->quoteRepository
+            $this->quoteRepository,
+            $this->orderItemsFactory
         );
     }
 
@@ -167,6 +177,7 @@ class PaymentorderTest extends TestCase
         $this->quote->method('getBillingAddress')->will($this->returnValue($billingAddress));
         $this->quote->method('getShippingAddress')->will($this->returnValue($shippingAddress));
         $this->quote->method('isVirtual')->will($this->returnValue(false));
+        $this->quote->method('getAllVisibleItems')->willReturn([]);
 
         $currencyCode = 'SEK';
         $currency = $this->getMockBuilder(Currency::class)
@@ -181,6 +192,9 @@ class PaymentorderTest extends TestCase
 
         $this->storeManager->method('getStore')->will($this->returnValue($store));
         $this->urlInterface->method('getBaseUrl')->willReturn('https://swedbankpay.com/');
+
+        $orderItemsCollection = $this->createMock(OrderItemsCollection::class);
+        $this->orderItemsFactory->method('create')->willReturn($orderItemsCollection);
 
         $this->assertInstanceOf(PaymentorderObject::class, $this->paymentorder->createPaymentorderObject());
     }
