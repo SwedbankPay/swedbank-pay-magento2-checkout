@@ -2,6 +2,11 @@
 
 namespace SwedbankPay\Checkout\Test\Unit;
 
+use Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\CategoryRepository;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
@@ -29,15 +34,28 @@ class OrderItemFactoryTest extends TestCase
      */
     protected $orderItem;
 
+    /**
+     * @var ProductRepository|MockObject
+     */
+    protected $productRepository;
+
+    /**
+     * @var CategoryRepository|MockObject
+     */
+    protected $categoryRepository;
+
     public function setUp()
     {
-        $this->orderItemFactory = new OrderItemFactory();
+        $this->productRepository = $this->createMock(ProductRepository::class);
+        $this->categoryRepository = $this->createMock(CategoryRepository::class);
+        $this->orderItemFactory = new OrderItemFactory($this->productRepository, $this->categoryRepository);
 
         $this->quoteItem = $this->getMockBuilder(QuoteItem::class)
             ->disableOriginalConstructor()
             ->setMethods([
                 'getSku',
                 'getName',
+                'getProduct',
                 'getQty',
                 'getPriceInclTax',
                 'getRowTotalInclTax',
@@ -52,6 +70,7 @@ class OrderItemFactoryTest extends TestCase
             ->setMethods([
                 'getSku',
                 'getName',
+                'getProductId',
                 'getQtyOrdered',
                 'getPriceInclTax',
                 'getRowTotalInclTax',
@@ -68,6 +87,9 @@ class OrderItemFactoryTest extends TestCase
      */
     public function testCreateByQuoteItem($orderItemArray)
     {
+        $productId = $orderItemArray['id'];
+        $categoryIds = $orderItemArray['categoryIds'];
+        $categoryName = $orderItemArray['categoryName'];
         $sku = $orderItemArray['sku'];
         $name = $orderItemArray['name'];
         $quantity = $orderItemArray['quantity'];
@@ -84,8 +106,18 @@ class OrderItemFactoryTest extends TestCase
 
         $payableAmount = $discountPrice ? $amount - $discountPrice : $amount;
 
+        $product = $this->createMock(Product::class);
+        $category = $this->createMock(Category::class);
+
+        $product->expects($this->once())->method('getId')->willReturn($productId);
+        $product->expects($this->once())->method('getCategoryIds')->willReturn($categoryIds);
+        $category->expects($this->once())->method('getName')->willReturn($categoryName);
+        $this->categoryRepository->expects($this->once())->method('get')->willReturn($category);
+        $this->productRepository->expects($this->once())->method('getById')->willReturn($product);
+
         $this->quoteItem->expects($this->once())->method('getSku')->willReturn($sku);
         $this->quoteItem->expects($this->once())->method('getName')->willReturn($name);
+        $this->quoteItem->expects($this->once())->method('getProduct')->willReturn($product);
         $this->quoteItem->expects($this->once())->method('getQty')->willReturn($quantity);
         $this->quoteItem->expects($this->once())->method('getPriceInclTax')->willReturn($unitPrice);
         $this->quoteItem->expects($this->once())->method('getTaxAmount')->willReturn($vatAmount);
@@ -108,6 +140,9 @@ class OrderItemFactoryTest extends TestCase
      */
     public function testCreateByOrderItem($orderItemArray)
     {
+        $productId = $orderItemArray['id'];
+        $categoryIds = $orderItemArray['categoryIds'];
+        $categoryName = $orderItemArray['categoryName'];
         $sku = $orderItemArray['sku'];
         $name = $orderItemArray['name'];
         $quantity = $orderItemArray['quantity'];
@@ -124,8 +159,17 @@ class OrderItemFactoryTest extends TestCase
 
         $payableAmount = $discountPrice ? $amount - $discountPrice : $amount;
 
+        $product = $this->createMock(Product::class);
+        $category = $this->createMock(Category::class);
+
+        $product->expects($this->once())->method('getCategoryIds')->willReturn($categoryIds);
+        $category->expects($this->once())->method('getName')->willReturn($categoryName);
+        $this->categoryRepository->expects($this->once())->method('get')->willReturn($category);
+        $this->productRepository->expects($this->once())->method('getById')->willReturn($product);
+
         $this->orderItem->expects($this->once())->method('getSku')->willReturn($sku);
         $this->orderItem->expects($this->once())->method('getName')->willReturn($name);
+        $this->orderItem->expects($this->once())->method('getProductId')->willReturn($productId);
         $this->orderItem->expects($this->once())->method('getQtyOrdered')->willReturn($quantity);
         $this->orderItem->expects($this->once())->method('getPriceInclTax')->willReturn($unitPrice);
         $this->orderItem->expects($this->once())->method('getTaxAmount')->willReturn($vatAmount);
@@ -137,6 +181,7 @@ class OrderItemFactoryTest extends TestCase
 
         $this->assertInstanceOf(OrderItem::class, $orderItem);
         $this->assertEquals('PRODUCT', $orderItem->getType());
+        $this->assertEquals($categoryName, $orderItem->getItemClass());
         $this->assertEquals($payableAmount * 100, $orderItem->getAmount());
         $this->assertEquals($discountPrice * 100, $orderItem->getDiscountPrice());
         $this->assertNull($orderItem->getDescription());
@@ -208,13 +253,50 @@ class OrderItemFactoryTest extends TestCase
         $this->assertEquals($shippingTaxPercent, $orderItem->getVatPercent());
     }
 
+    public function testGetItemClassWithCategoryNameContainingSpaces()
+    {
+        $productId = 1;
+        $categoryIds = [1];
+        $categoryName = 'Hand Bag';
+
+        $product = $this->createMock(Product::class);
+        $category = $this->createMock(Category::class);
+
+        $product->expects($this->once())->method('getCategoryIds')->willReturn($categoryIds);
+        $category->expects($this->once())->method('getName')->willReturn($categoryName);
+
+        $this->categoryRepository->expects($this->once())->method('get')->willReturn($category);
+        $this->productRepository->expects($this->once())->method('getById')->willReturn($product);
+
+        $itemClass = $this->orderItemFactory->getItemClass($productId);
+
+        $this->assertEquals('HandBag', $itemClass);
+    }
+
+    public function testGetItemClassWithNoSuchEntityException()
+    {
+        $productId = 1;
+
+        $this->productRepository
+            ->expects($this->once())
+            ->method('getById')
+            ->willThrowException(new NoSuchEntityException());
+
+        $itemClass = $this->orderItemFactory->getItemClass($productId);
+
+        $this->assertEquals('ProductGroup1', $itemClass);
+    }
+
     public function orderItemDataProvider()
     {
         return [
             'Test 1' => [
                 [
+                    'id' => 1,
                     'sku' => '24-WB04',
                     'name' => 'Push It Messenger Bag',
+                    'categoryIds' => [101],
+                    'categoryName' => 'Bag',
                     'quantity' => 3,
                     'unitPrice' => 56.75,
                     'amount' => 168.75,
@@ -228,8 +310,11 @@ class OrderItemFactoryTest extends TestCase
             ],
             'Test 2' => [
                 [
+                    'id' => 2,
                     'sku' => '24-WB03',
-                    'name' => 'Hand Bag',
+                    'name' => 'Womens tops',
+                    'categoryIds' => [102],
+                    'categoryName' => 'Tops',
                     'quantity' => 2,
                     'unitPrice' => 62.5,
                     'amount' => 125.00,

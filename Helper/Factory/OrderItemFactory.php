@@ -3,6 +3,11 @@
 
 namespace SwedbankPay\Checkout\Helper\Factory;
 
+use Magento\Catalog\Api\Data\CategoryInterface;
+use Magento\Catalog\Model\CategoryRepository;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
@@ -12,6 +17,29 @@ use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\Item\OrderItem;
 class OrderItemFactory
 {
     /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
+
+    /**
+     * OrderItemFactory constructor.
+     * @param ProductRepository $productRepository
+     * @param CategoryRepository $categoryRepository
+     */
+    public function __construct(
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository
+    ) {
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    /**
      * @param QuoteItem $quoteItem
      * @return OrderItem
      */
@@ -20,7 +48,7 @@ class OrderItemFactory
         $sku = $quoteItem->getSku();
         $name = $quoteItem->getName();
         $type = 'PRODUCT';
-        $itemClass = 'ProductGroup1';
+        $itemClass = $this->getItemClass($quoteItem->getProduct()->getId());
         $quantity = (float) $quoteItem->getQty();
         $unitPrice = (int) round($quoteItem->getPriceInclTax() * 100);
         $amount = (int) round($quoteItem->getRowTotalInclTax() * 100);
@@ -53,7 +81,7 @@ class OrderItemFactory
         $sku = $orderItem->getSku();
         $name = $orderItem->getName();
         $type = 'PRODUCT';
-        $itemClass = 'ProductGroup1';
+        $itemClass = $this->getItemClass($orderItem->getProductId());
         $quantity = (float) $orderItem->getQtyOrdered();
         $unitPrice = (int) round($orderItem->getPriceInclTax() * 100);
         $amount = (int) round($orderItem->getRowTotalInclTax() * 100);
@@ -186,6 +214,47 @@ class OrderItemFactory
         }
 
         return $orderItem;
+    }
+
+    /**
+     * @param int $productId
+     * @return string
+     */
+    public function getItemClass(int $productId)
+    {
+        try {
+            /** @var Product $product */
+            $product = $this->productRepository->getById($productId);
+
+            $category = $this->getCategory($product);
+            $categoryName = str_replace(' ', '', $category->getName());
+
+            $pattern = '/([a-zA-Z0-9_])+/';
+            preg_match($pattern, $categoryName, $matches);
+
+            if (count($matches) > 0) {
+                return $matches[0];
+            }
+            return 'ProductGroup1';
+        } catch (NoSuchEntityException $e) {
+            return 'ProductGroup1';
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @return CategoryInterface
+     * @throws NoSuchEntityException
+     */
+    protected function getCategory(Product $product)
+    {
+        $categoryIds = $product->getCategoryIds();
+
+        if (count($categoryIds) > 0) {
+            return $this->categoryRepository->get($categoryIds[0]);
+        }
+
+        throw new NoSuchEntityException();
     }
 
     /**
