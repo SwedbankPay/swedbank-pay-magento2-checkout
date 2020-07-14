@@ -9,6 +9,7 @@ use SwedbankPay\Api\Client\Exception;
 use SwedbankPay\Api\Service\Data\ResponseInterface;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
+use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
 use SwedbankPay\Core\Exception\ServiceException;
 use SwedbankPay\Core\Model\Service as ClientRequestService;
 use SwedbankPay\Core\Exception\SwedbankPayException;
@@ -37,12 +38,18 @@ class Refund extends AbstractCommand
     protected $mageOrderRepo;
 
     /**
+     * @var OrderItemsFactory
+     */
+    protected $orderItemsFactory;
+
+    /**
      * Refund constructor.
      *
      * @param ClientRequestService $requestService
      * @param RequestInterface $request
      * @param PaymentData $paymentData
      * @param OrderRepositoryInterface $orderRepository
+     * @param OrderItemsFactory $orderItemsFactory
      * @param Logger $logger
      * @param array $data
      */
@@ -51,6 +58,7 @@ class Refund extends AbstractCommand
         RequestInterface $request,
         PaymentData $paymentData,
         OrderRepositoryInterface $orderRepository,
+        OrderItemsFactory $orderItemsFactory,
         Logger $logger,
         array $data = []
     ) {
@@ -63,6 +71,7 @@ class Refund extends AbstractCommand
         $this->request = $request;
         $this->paymentData = $paymentData;
         $this->mageOrderRepo = $orderRepository;
+        $this->orderItemsFactory = $orderItemsFactory;
     }
 
     /**
@@ -84,8 +93,8 @@ class Refund extends AbstractCommand
 
         /** @var MageOrder $order */
         $order = $payment->getOrder();
-
         $paymentOrder = $this->paymentData->getByOrder($order);
+        $orderItems = $this->orderItemsFactory->createByOrder($order);
 
         $this->checkRemainingAmount('refund', $amount, $order, $paymentOrder);
 
@@ -93,7 +102,8 @@ class Refund extends AbstractCommand
         $transaction->setDescription("Reversing the captured payment")
             ->setAmount($amount * 100)
             ->setVatAmount($order->getBaseTaxAmount() * 100)
-            ->setPayeeReference($this->generateRandomString(30));
+            ->setPayeeReference($this->generateRandomString(30))
+            ->setOrderItems($orderItems);
 
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);
