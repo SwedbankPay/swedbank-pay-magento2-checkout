@@ -196,7 +196,38 @@ class PaymentorderTest extends TestCase
         $orderItemsCollection = $this->createMock(OrderItemsCollection::class);
         $this->orderItemsFactory->method('create')->willReturn($orderItemsCollection);
 
-        $this->assertInstanceOf(PaymentorderObject::class, $this->paymentorder->createPaymentorderObject());
+        $paymentOrderObject = $this->paymentorder->createPaymentorderObject($this->quote);
+
+        $this->assertInstanceOf(PaymentorderObject::class, $paymentOrderObject);
+        $this->assertEquals('Purchase', $paymentOrderObject->getPaymentorder()->getOperation());
+    }
+
+    public function testCreatePaymentorderUpdateObject()
+    {
+        $billingAddress = $this->getMockBuilder(Address::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getTaxAmount'])
+            ->getMock();
+        $billingAddress->method('getTaxAmount')->will($this->returnValue(25));
+
+        $shippingAddress = $this->getMockBuilder(Address::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getTaxAmount'])
+            ->getMock();
+        $shippingAddress->method('getTaxAmount')->will($this->returnValue(0));
+
+        $this->quote->method('getGrandTotal')->will($this->returnValue(100));
+        $this->quote->method('getBillingAddress')->will($this->returnValue($billingAddress));
+        $this->quote->method('getShippingAddress')->will($this->returnValue($shippingAddress));
+        $this->quote->method('isVirtual')->will($this->returnValue(false));
+
+        $orderItemsCollection = $this->createMock(OrderItemsCollection::class);
+        $this->orderItemsFactory->method('create')->willReturn($orderItemsCollection);
+
+        $paymentOrderObject = $this->paymentorder->createPaymentorderUpdateObject($this->quote);
+
+        $this->assertInstanceOf(PaymentorderObject::class, $paymentOrderObject);
+        $this->assertEquals('UpdateOrder', $paymentOrderObject->getPaymentorder()->getOperation());
     }
 
     public function testCreatePayeeInfoObjectInstance()
