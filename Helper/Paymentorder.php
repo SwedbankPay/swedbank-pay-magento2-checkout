@@ -154,14 +154,7 @@ class Paymentorder
         $currency = $store->getCurrentCurrency()->getCode();
 
         $totalAmount = $mageQuote->getGrandTotal() * 100;
-
-        if ($mageQuote->isVirtual()) {
-            $vatAmount = $mageQuote->getBillingAddress()->getTaxAmount() * 100;
-        }
-
-        if (!isset($vatAmount)) {
-            $vatAmount = $mageQuote->getShippingAddress()->getTaxAmount() * 100;
-        }
+        $vatAmount = $this->getPaymentorderVatAmount($mageQuote);
 
         $urlData = $this->createUrlObject();
         $payeeInfo = $this->createPayeeInfoObject();
@@ -201,6 +194,28 @@ class Paymentorder
             $payer->setConsumerProfileRef($consumerProfileRef);
             $paymentOrder->setPayer($payer);
         }
+
+        $paymentOrderObject = new PaymentorderObject();
+        $paymentOrderObject->setPaymentorder($paymentOrder);
+
+        return $paymentOrderObject;
+    }
+
+    /**
+     * @param MageQuote $mageQuote
+     * @return PaymentorderObject
+     */
+    public function createPaymentorderUpdateObject(MageQuote $mageQuote)
+    {
+        $totalAmount = $mageQuote->getGrandTotal() * 100;
+        $vatAmount = $this->getPaymentorderVatAmount($mageQuote);
+        $orderItems = $this->createOrderItemsObject($mageQuote);
+
+        $paymentOrder = new PaymentorderRequestResource();
+        $paymentOrder->setOperation('UpdateOrder')
+            ->setAmount($totalAmount)
+            ->setVatAmount($vatAmount)
+            ->setOrderItems($orderItems);
 
         $paymentOrderObject = new PaymentorderObject();
         $paymentOrderObject->setPaymentorder($paymentOrder);
@@ -342,6 +357,19 @@ class Paymentorder
         $swish->setEnableEcomOnly(false);
 
         return $swish;
+    }
+
+    /**
+     * @param MageQuote $mageQuote
+     * @return float|int
+     */
+    public function getPaymentorderVatAmount(MageQuote $mageQuote)
+    {
+        if ($mageQuote->isVirtual()) {
+            return $mageQuote->getBillingAddress()->getTaxAmount() * 100;
+        }
+
+        return $mageQuote->getShippingAddress()->getTaxAmount() * 100;
     }
 
     /**
