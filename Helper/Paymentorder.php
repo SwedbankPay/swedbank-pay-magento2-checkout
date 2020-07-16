@@ -17,6 +17,7 @@ use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Theme\Block\Html\Header\Logo as HeaderLogo;
 use SwedbankPay\Api\Client\Client as ApiClient;
+use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\OrderItemsCollection;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Collection\PaymentorderItemsCollection;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCampaignInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderCreditCard;
@@ -28,6 +29,7 @@ use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderSwish;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderUrl;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Request\Paymentorder as PaymentorderRequestResource;
 use SwedbankPay\Checkout\Helper\Config as PaymentMenuConfig;
+use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
 use SwedbankPay\Checkout\Model\QuoteFactory;
 use SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository;
 use SwedbankPay\Core\Helper\Config as ClientConfig;
@@ -35,6 +37,7 @@ use SwedbankPay\Core\Helper\Config as ClientConfig;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Paymentorder
 {
@@ -98,6 +101,11 @@ class Paymentorder
      */
     protected $quoteRepository;
 
+    /**
+     * @var OrderItemsFactory
+     */
+    protected $orderItemsFactory;
+
     public function __construct(
         CheckoutSession $checkoutSession,
         StoreManagerInterface $storeManager,
@@ -110,7 +118,8 @@ class Paymentorder
         ScopeConfigInterface $scopeConfig,
         Resolver $localeResolver,
         QuoteFactory $quoteFactory,
-        QuoteRepository $quoteRepository
+        QuoteRepository $quoteRepository,
+        OrderItemsFactory $orderItemsFactory
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->storeManager = $storeManager;
@@ -124,6 +133,7 @@ class Paymentorder
         $this->localeResolver = $localeResolver;
         $this->quoteFactory = $quoteFactory;
         $this->quoteRepository = $quoteRepository;
+        $this->orderItemsFactory = $orderItemsFactory;
     }
 
     /**
@@ -144,17 +154,11 @@ class Paymentorder
         $currency = $store->getCurrentCurrency()->getCode();
 
         $totalAmount = $mageQuote->getGrandTotal() * 100;
-
-        if ($mageQuote->isVirtual()) {
-            $vatAmount = $mageQuote->getBillingAddress()->getTaxAmount() * 100;
-        }
-
-        if (!isset($vatAmount)) {
-            $vatAmount = $mageQuote->getShippingAddress()->getTaxAmount() * 100;
-        }
+        $vatAmount = $this->getPaymentorderVatAmount($mageQuote);
 
         $urlData = $this->createUrlObject();
         $payeeInfo = $this->createPayeeInfoObject();
+        $orderItems = $this->createOrderItemsObject($mageQuote);
 
         /**
          * Optional payment method specific stuff
@@ -178,7 +182,8 @@ class Paymentorder
             ->setGeneratePaymentToken(false)
             ->setDisablePaymentMenu(false)
             ->setUrls($urlData)
-            ->setPayeeInfo($payeeInfo);
+            ->setPayeeInfo($payeeInfo)
+            ->setOrderItems($orderItems);
 
         if (isset($paymentorderItems) && ($paymentorderItems instanceof PaymentorderItemsCollection)) {
             $paymentOrder->setItems($paymentorderItems);
@@ -189,6 +194,28 @@ class Paymentorder
             $payer->setConsumerProfileRef($consumerProfileRef);
             $paymentOrder->setPayer($payer);
         }
+
+        $paymentOrderObject = new PaymentorderObject();
+        $paymentOrderObject->setPaymentorder($paymentOrder);
+
+        return $paymentOrderObject;
+    }
+
+    /**
+     * @param MageQuote $mageQuote
+     * @return PaymentorderObject
+     */
+    public function createPaymentorderUpdateObject(MageQuote $mageQuote)
+    {
+        $totalAmount = $mageQuote->getGrandTotal() * 100;
+        $vatAmount = $this->getPaymentorderVatAmount($mageQuote);
+        $orderItems = $this->createOrderItemsObject($mageQuote);
+
+        $paymentOrder = new PaymentorderRequestResource();
+        $paymentOrder->setOperation('UpdateOrder')
+            ->setAmount($totalAmount)
+            ->setVatAmount($vatAmount)
+            ->setOrderItems($orderItems);
 
         $paymentOrderObject = new PaymentorderObject();
         $paymentOrderObject->setPaymentorder($paymentOrder);
@@ -237,6 +264,15 @@ class Paymentorder
             ->setPayeeReference($this->generateRandomString(30));
 
         return $payeeInfo;
+    }
+
+    /**
+     * @param MageQuote $quote
+     * @return OrderItemsCollection
+     */
+    public function createOrderItemsObject(MageQuote $quote)
+    {
+        return $this->orderItemsFactory->create($quote);
     }
 
     /**
@@ -321,6 +357,19 @@ class Paymentorder
         $swish->setEnableEcomOnly(false);
 
         return $swish;
+    }
+
+    /**
+     * @param MageQuote $mageQuote
+     * @return float|int
+     */
+    public function getPaymentorderVatAmount(MageQuote $mageQuote)
+    {
+        if ($mageQuote->isVirtual()) {
+            return $mageQuote->getBillingAddress()->getTaxAmount() * 100;
+        }
+
+        return $mageQuote->getShippingAddress()->getTaxAmount() * 100;
     }
 
     /**

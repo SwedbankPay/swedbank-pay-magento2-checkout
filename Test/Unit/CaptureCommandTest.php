@@ -10,6 +10,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Tax\Model\Calculation;
 use PHPUnit\Framework\TestCase;
 use SwedbankPay\Checkout\Gateway\Command\Capture;
+use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
 use SwedbankPay\Checkout\Helper\PaymentData;
 use SwedbankPay\Core\Logger\Logger;
 use SwedbankPay\Core\Model\Service;
@@ -50,6 +51,9 @@ class CaptureCommandTest extends TestCase
         /** @var OrderRepositoryInterface $mageOrderRepo */
         $mageOrderRepo = $this->createMock(OrderRepositoryInterface::class);
 
+        /** @var OrderItemsFactory $orderItemsFactory */
+        $orderItemsFactory = $this->createMock(OrderItemsFactory::class);
+
         /** @var Logger $logger */
         $logger = $this->createMock(Logger::class);
 
@@ -62,6 +66,7 @@ class CaptureCommandTest extends TestCase
             $calculator,
             $priceCurrency,
             $mageOrderRepo,
+            $orderItemsFactory,
             $logger,
             []
         );
