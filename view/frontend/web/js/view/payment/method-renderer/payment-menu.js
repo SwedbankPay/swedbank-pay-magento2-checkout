@@ -51,6 +51,13 @@ define([
 
                 self.totals = totals;
             });
+
+            window.onfocus = function () {
+                if (typeof payex.hostedView.paymentMenu !== "undefined") {
+                    console.log('SwedbankPay hosted view was refreshed');
+                    payex.hostedView.paymentMenu().refresh();
+                }
+            }
         },
         clearPaymentMenu: function(){
             if (typeof payex.hostedView.paymentMenu !== "undefined") {
@@ -65,6 +72,20 @@ define([
 
             fullscreenLoader.startLoader();
 
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const state = urlParams.get('state');
+            const paymentScriptUrl = window.sessionStorage.getItem('paymentScript');
+
+            if (state != null && state.toLowerCase() === 'redirected' && paymentScriptUrl != null) {
+                self.clearPaymentMenu();
+                self.renderPaymentMenuScript(paymentScriptUrl);
+
+                self.paymentScript = paymentScriptUrl;
+                fullscreenLoader.stopLoader();
+                return;
+            }
+
             storage.get(
                 self.config.data.onUpdated,
                 "",
@@ -75,6 +96,7 @@ define([
                     self.renderPaymentMenuScript(response.result);
 
                     self.paymentScript = response.result;
+                    window.sessionStorage.setItem('paymentScript', response.result);
                     fullscreenLoader.stopLoader();
                 }
             }).fail(function(message){
