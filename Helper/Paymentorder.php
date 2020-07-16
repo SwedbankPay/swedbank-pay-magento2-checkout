@@ -231,6 +231,7 @@ class Paymentorder
     {
         $mageBaseUrl = $this->urlInterface->getBaseUrl();
         $mageCompleteUrl = $this->urlInterface->getUrl('checkout/onepage/success');
+        $magePaymentUrl = $this->urlInterface->getUrl('checkout') . '/?state=redirected';
         $mageCancelUrl = $this->urlInterface->getUrl('checkout/cart');
         $mageCallbackUrl = $this->urlInterface->getUrl('SwedbankPayCheckout/Index/Callback');
 
@@ -240,6 +241,7 @@ class Paymentorder
         $urlData = new PaymentorderUrl();
         $urlData->setHostUrls([$baseUrlParts['scheme'] . '://' . $baseUrlParts['host']])
             ->setCompleteUrl($mageCompleteUrl)
+            ->setPaymentUrl($magePaymentUrl)
             ->setCancelUrl($mageCancelUrl)
             ->setCallbackUrl($mageCallbackUrl);
 

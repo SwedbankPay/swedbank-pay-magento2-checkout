@@ -26,6 +26,7 @@ use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderInvoice;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderObject;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderPayeeInfo;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderSwish;
+use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderUrl;
 use SwedbankPay\Checkout\Helper\Config as PaymentMenuConfig;
 use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
 use SwedbankPay\Checkout\Helper\Paymentorder;
@@ -256,5 +257,37 @@ class PaymentorderTest extends TestCase
         $swish = $this->paymentorder->createSwishObject();
 
         $this->assertInstanceOf(PaymentorderSwish::class, $swish);
+    }
+
+    public function testCreateUrlObjectInstance()
+    {
+        $this->urlInterface
+            ->expects($this->once())
+            ->method('getBaseUrl')
+            ->willReturn('https://swedbankpay.com/');
+
+        $urlData = $this->paymentorder->createUrlObject();
+
+        $this->assertInstanceOf(PaymentorderUrl::class, $urlData);
+    }
+
+    public function testUrlObjectHasPaymentUrl()
+    {
+        $baseUrl = 'https://swedbankpay.com/';
+
+        $this->urlInterface
+            ->expects($this->once())
+            ->method('getBaseUrl')
+            ->willReturn($baseUrl);
+
+        $this->urlInterface
+            ->expects($this->atLeastOnce())
+            ->method('getUrl')
+            ->will($this->returnArgument(0));
+
+        $urlData = $this->paymentorder->createUrlObject();
+
+        $this->stringContains($urlData->getPaymentUrl(), 'state');
+        $this->assertNotNull($urlData->getPaymentUrl());
     }
 }
