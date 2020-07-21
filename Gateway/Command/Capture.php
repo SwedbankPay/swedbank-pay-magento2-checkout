@@ -13,25 +13,19 @@ use Magento\Payment\Gateway\Command;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order as MageOrder;
-use Magento\Sales\Model\Order\Invoice;
-use Magento\Sales\Model\Order\Invoice\Item as InvoiceItem;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Model\Calculation;
 use Magento\Tax\Model\Config as TaxConfig;
 use SwedbankPay\Api\Client\Exception;
 use SwedbankPay\Api\Service\Data\ResponseInterface;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\DescriptionItem;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\VatSummaryItem;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\ItemDescriptionCollection;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\VatSummaryCollection;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
 use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
+use SwedbankPay\Checkout\Helper\PaymentData;
 use SwedbankPay\Core\Exception\ServiceException;
-use SwedbankPay\Core\Model\Service as ClientRequestService;
 use SwedbankPay\Core\Exception\SwedbankPayException;
 use SwedbankPay\Core\Logger\Logger;
-use SwedbankPay\Checkout\Helper\PaymentData;
+use SwedbankPay\Core\Model\Service as ClientRequestService;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

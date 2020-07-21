@@ -29,6 +29,8 @@ use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderSwish;
 use SwedbankPay\Api\Service\Paymentorder\Resource\PaymentorderUrl;
 use SwedbankPay\Checkout\Helper\Config as PaymentMenuConfig;
 use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
+use SwedbankPay\Checkout\Helper\Factory\PayerFactory;
+use SwedbankPay\Checkout\Helper\Factory\RiskIndicatorFactory;
 use SwedbankPay\Checkout\Helper\Paymentorder;
 use SwedbankPay\Checkout\Model\QuoteFactory;
 use SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository;
@@ -114,6 +116,16 @@ class PaymentorderTest extends TestCase
      */
     protected $orderItemsFactory;
 
+    /**
+     * @var PayerFactory|MockObject
+     */
+    protected $payerFactory;
+
+    /**
+     * @var RiskIndicatorFactory|MockObject
+     */
+    protected $riskIndicatorFactory;
+
     public function setUp()
     {
         $this->quote = $this->getMockBuilder(Quote::class)
@@ -138,6 +150,8 @@ class PaymentorderTest extends TestCase
         $this->quoteFactory = $this->getMockBuilder('SwedbankPay\Checkout\Model\QuoteFactory')->getMock();
         $this->quoteRepository = $this->createMock(QuoteRepository::class);
         $this->orderItemsFactory = $this->createMock(OrderItemsFactory::class);
+        $this->payerFactory = $this->createMock(PayerFactory::class);
+        $this->riskIndicatorFactory = $this->createMock(RiskIndicatorFactory::class);
 
         $this->paymentorder = new Paymentorder(
             $this->checkoutSession,
@@ -152,7 +166,9 @@ class PaymentorderTest extends TestCase
             $this->localeResolver,
             $this->quoteFactory,
             $this->quoteRepository,
-            $this->orderItemsFactory
+            $this->orderItemsFactory,
+            $this->payerFactory,
+            $this->riskIndicatorFactory
         );
     }
 
@@ -197,7 +213,7 @@ class PaymentorderTest extends TestCase
         $orderItemsCollection = $this->createMock(OrderItemsCollection::class);
         $this->orderItemsFactory->method('create')->willReturn($orderItemsCollection);
 
-        $paymentOrderObject = $this->paymentorder->createPaymentorderObject($this->quote);
+        $paymentOrderObject = $this->paymentorder->createPaymentorderObject();
 
         $this->assertInstanceOf(PaymentorderObject::class, $paymentOrderObject);
         $this->assertEquals('Purchase', $paymentOrderObject->getPaymentorder()->getOperation());
