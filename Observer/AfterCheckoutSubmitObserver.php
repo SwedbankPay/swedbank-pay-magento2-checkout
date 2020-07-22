@@ -7,18 +7,22 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderRepository;
 use SwedbankPay\Api\Service\Paymentorder\Request\GetCurrentPayment;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Response\Data\GetCurrentPaymentInterface;
-use SwedbankPay\Core\Model\Service as ClientService;
-use SwedbankPay\Core\Helper\Order as OrderHelper;
-use SwedbankPay\Core\Logger\Logger;
+use SwedbankPay\Checkout\Api\Data\OrderInterface as PaymentOrderInterface;
 use SwedbankPay\Checkout\Helper\Config as ConfigHelper;
 use SwedbankPay\Checkout\Helper\PaymentData;
 use SwedbankPay\Checkout\Model\Ui\ConfigProvider;
-use SwedbankPay\Checkout\Api\Data\OrderInterface as PaymentOrderInterface;
+use SwedbankPay\Core\Helper\Order as OrderHelper;
+use SwedbankPay\Core\Logger\Logger;
+use SwedbankPay\Core\Model\Service as ClientService;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AfterCheckoutSubmitObserver implements ObserverInterface
 {
     /**
@@ -42,6 +46,11 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
     protected $orderHelper;
 
     /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
      * @var Logger
      */
     protected $logger;
@@ -51,12 +60,14 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
         PaymentData $paymentData,
         ClientService $clientService,
         OrderHelper $orderHelper,
+        OrderRepository $orderRepository,
         Logger $logger
     ) {
         $this->configHelper = $configHelper;
         $this->paymentData = $paymentData;
         $this->clientService = $clientService;
         $this->orderHelper = $orderHelper;
+        $this->orderRepository = $orderRepository;
         $this->logger = $logger;
     }
 
@@ -78,7 +89,7 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
             return;
         }
 
-        /** @var OrderInterface $order */
+        /** @var Order $order */
         $order = $observer->getEvent()->getData('order');
 
         if (!$order || !($this->paymentData->getByOrder($order) instanceof PaymentOrderInterface)) {
@@ -106,8 +117,30 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
         $this->paymentData->update($paymentData);
 
         if ($paymentData->getIntent() == 'Sale') {
+            $this->logger->debug('Saving sale transaction number to order grid!');
+            $this->saveTransactionNumber($order, $currentPayment);
+
             $this->logger->debug('Intent is sale, creating invoice!');
             $this->orderHelper->createInvoice($order);
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param GetCurrentPaymentInterface $currentPayment
+     */
+    public function saveTransactionNumber(Order $order, GetCurrentPaymentInterface $currentPayment)
+    {
+        $transactionsArray = $currentPayment->getPayment()->getTransactions()->__toArray();
+        $transactionList = $transactionsArray['transaction_list'];
+
+        foreach ($transactionList as $transaction) {
+            if ($transaction['type'] == 'Sale' && $transaction['state'] == 'Completed') {
+                $order->setData('swedbank_pay_transaction_number', $transaction['number']);
+                $this->orderRepository->save($order);
+
+                break;
+            }
         }
     }
 }

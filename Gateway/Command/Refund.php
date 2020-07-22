@@ -20,6 +20,9 @@ use Magento\Payment\Gateway\Command;
 use Magento\Framework\App\RequestInterface;
 use SwedbankPay\Checkout\Helper\PaymentData;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Refund extends AbstractCommand
 {
     /**

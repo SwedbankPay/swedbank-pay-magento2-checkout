@@ -15,7 +15,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use SwedbankPay\Api\Client\Exception as ClientException;
 use SwedbankPay\Api\Service\Payment\Transaction\Resource\Response\Data\TransactionObjectInterface;
-use SwedbankPay\Api\Service\Payment\Transaction\Response\Data\TransactionInterface;
+use SwedbankPay\Api\Service\Payment\Transaction\Resource\Response\Data\TransactionInterface;
 use SwedbankPay\Api\Service\Paymentorder\Request\GetCurrentPayment;
 use SwedbankPay\Api\Service\Paymentorder\Resource\Response\Data\GetCurrentPaymentInterface;
 use SwedbankPay\Api\Service\Request;

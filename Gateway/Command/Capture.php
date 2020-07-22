@@ -197,6 +197,10 @@ class Capture extends AbstractCommand
 
         $this->paymentData->updateRemainingAmounts('capture', $amount, $paymentOrder);
 
+        $this->logger->debug('Saving sale transaction number to order grid!');
+        $order->setData('swedbank_pay_transaction_number', $captureResponseData['capture']['transaction']['number']);
+        $this->mageOrderRepo->save($order);
+
         return null;
     }
 
