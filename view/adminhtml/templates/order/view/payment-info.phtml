@@ -11,4 +11,8 @@
     <?php if ($this->getCurrentPaymentInstrument()): ?>
         <strong>SwedbankPay Payment Instrument:</strong> <?php echo $this->getCurrentPaymentInstrument(); ?>
     <?php endif; ?>
+
+    <?php if ($this->getSwedbankPayTransactionNumber()): ?>
+        <strong>SwedbankPay Capture Transaction No:</strong> <?php echo $this->getSwedbankPayTransactionNumber(); ?>
+    <?php endif; ?>
 </p>
