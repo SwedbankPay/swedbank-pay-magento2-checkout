@@ -3,6 +3,8 @@
 namespace SwedbankPay\Checkout\Observer;
 
 use Exception;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -117,7 +119,6 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
         $this->paymentData->update($paymentData);
 
         if ($paymentData->getIntent() == 'Sale') {
-            $this->logger->debug('Saving sale transaction number to order grid!');
             $this->saveTransactionNumber($order, $currentPayment);
 
             $this->logger->debug('Intent is sale, creating invoice!');
@@ -128,6 +129,9 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
     /**
      * @param Order $order
      * @param GetCurrentPaymentInterface $currentPayment
+     * @throws AlreadyExistsException
+     * @throws InputException
+     * @throws NoSuchEntityException
      */
     public function saveTransactionNumber(Order $order, GetCurrentPaymentInterface $currentPayment)
     {
@@ -138,6 +142,11 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
             if ($transaction['type'] == 'Sale' && $transaction['state'] == 'Completed') {
                 $order->setData('swedbank_pay_transaction_number', $transaction['number']);
                 $this->orderRepository->save($order);
+
+                $this->logger->debug(
+                    'Saved sale transaction number to order grid',
+                    ['order_id' => $order->getEntityId(), 'transaction_no' => $transaction['number']]
+                );
 
                 break;
             }
