@@ -49,7 +49,7 @@ class OrderItemsFactory
     {
         $orderItems = new OrderItemsCollection();
 
-        foreach ($order->getItems() as $mageOrderItem) {
+        foreach ($order->getAllVisibleItems() as $mageOrderItem) {
             $orderItem = $this->orderItemFactory->createByOrderItem($mageOrderItem);
             $orderItems->addItem($orderItem);
         }

@@ -103,11 +103,13 @@ class QuoteRepositoryPlugin
                 return null;
             }
 
+            $totalAmount = (int) round($quote->getGrandTotal() * 100);
+
             $swedbankPayQuote->setIsUpdated(1);
-            $swedbankPayQuote->setAmount($quote->getGrandTotal() * 100);
+            $swedbankPayQuote->setAmount($totalAmount);
             $swedbankPayQuote->setVatAmount($this->paymentorder->getPaymentorderVatAmount($quote));
-            $swedbankPayQuote->setRemainingCapturingAmount($quote->getGrandTotal() * 100);
-            $swedbankPayQuote->setRemainingCancellationAmount($quote->getGrandTotal() * 100);
+            $swedbankPayQuote->setRemainingCapturingAmount($totalAmount);
+            $swedbankPayQuote->setRemainingCancellationAmount($totalAmount);
             $swedbankPayQuote->setRemainingReversalAmount(0);
 
             $this->quoteRepository->save($swedbankPayQuote);
