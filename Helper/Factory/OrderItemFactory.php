@@ -45,7 +45,7 @@ class OrderItemFactory
      */
     public function createByQuoteItem(QuoteItem $quoteItem)
     {
-        $sku = $quoteItem->getSku();
+        $reference = $this->getReference($quoteItem->getSku());
         $name = $quoteItem->getName();
         $type = 'PRODUCT';
         $itemClass = $this->getItemClass($quoteItem->getProduct()->getId());
@@ -58,7 +58,7 @@ class OrderItemFactory
         $description = $quoteItem->getDescription();
 
         return $this->create(
-            $sku,
+            $reference,
             $name,
             $type,
             $itemClass,
@@ -78,7 +78,7 @@ class OrderItemFactory
      */
     public function createByOrderItem(OrderItemInterface $orderItem)
     {
-        $sku = $orderItem->getSku();
+        $reference = $this->getReference($orderItem->getSku());
         $name = $orderItem->getName();
         $type = 'PRODUCT';
         $itemClass = $this->getItemClass($orderItem->getProductId());
@@ -91,7 +91,7 @@ class OrderItemFactory
         $description = $orderItem->getDescription();
 
         return $this->create(
-            $sku,
+            $reference,
             $name,
             $type,
             $itemClass,
@@ -214,6 +214,18 @@ class OrderItemFactory
         }
 
         return $orderItem;
+    }
+
+    /**
+     * @param string $sku
+     * @return string
+     */
+    public function getReference($sku)
+    {
+        $sku = preg_replace("/[^ \w]+/", "", $sku);
+        $sku = str_replace(' ', '', $sku);
+
+        return $sku;
     }
 
     /**
