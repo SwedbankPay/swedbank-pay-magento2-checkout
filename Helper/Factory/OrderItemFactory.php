@@ -114,7 +114,11 @@ class OrderItemFactory
         $shippingAmount = (int) round($quote->getShippingAddress()->getShippingAmount() * 100);
         $shippingInclTax = (int) round($quote->getShippingAddress()->getShippingInclTax() * 100);
         $shippingTaxAmount = (int) round($quote->getShippingAddress()->getShippingTaxAmount() * 100);
-        $shippingTaxPercent = (int) round(($shippingTaxAmount * 100 / $shippingAmount) * 100);
+        $shippingTaxPercent = 0;
+
+        if ($shippingAmount !== 0) {
+            $shippingTaxPercent = (int) round(($shippingTaxAmount * 100 / $shippingAmount) * 100);
+        }
 
         return $this->create(
             'ShippingFee',
@@ -138,7 +142,11 @@ class OrderItemFactory
         $shippingAmount = (int) round($order->getShippingAmount() * 100);
         $shippingInclTax = (int) round($order->getShippingInclTax() * 100);
         $shippingTaxAmount = (int) round($order->getShippingTaxAmount() * 100);
-        $shippingTaxPercent = (int) round(($shippingTaxAmount * 100 / $shippingAmount) * 100);
+        $shippingTaxPercent = 0;
+
+        if ($shippingAmount !== 0) {
+            $shippingTaxPercent = (int) round(($shippingTaxAmount * 100 / $shippingAmount) * 100);
+        }
 
         return $this->create(
             'ShippingFee',
