@@ -68,7 +68,7 @@ define([
             $('#swedbank-pay-checkout').empty();
         },
         updatePaymentMenuScript: function(){
-            let self = this;
+            var self = this;
 
             fullscreenLoader.startLoader();
 
@@ -137,7 +137,7 @@ define([
             openShippingInformation.open();
         },
         onPaymentCompleted: function(paymentCompletedEvent) {
-            let self = this;
+            var self = this;
             fullscreenLoader.startLoader();
 
             storage.post(
@@ -150,14 +150,17 @@ define([
                     fullscreenLoader.stopLoader();
                     self.updatePaymentMenuScript();
                     self.onShippingInfoNotValid();
+
+                    self.logError('Could not place order in Magento');
                 }
-            }).fail(function(message){
-                console.error(message);
+            }).fail(function(message) {
                 fullscreenLoader.stopLoader();
+                console.error(message);
+                self.logError(message);
             });
         },
         onPaymentFailed: function(paymentFailedEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentFailed,
@@ -170,7 +173,7 @@ define([
             });
         },
         onPaymentCreated: function(paymentCreatedEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentCreated,
@@ -183,7 +186,7 @@ define([
             });
         },
         onPaymentToS: function(paymentToSEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentToS,
@@ -197,7 +200,7 @@ define([
             });
         },
         onPaymentMenuInstrumentSelected: function(paymentMenuInstrumentSelectedEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentMenuInstrumentSelected,
@@ -209,10 +212,19 @@ define([
             });
         },
         onError: function(error) {
-            let self = this;
+            var self = this;
+
+            self.logError(error);
+        },
+        logError: function(details) {
+            var self = this;
+
+            var error = {
+                details: details
+            };
 
             storage.post(
-                self.config.data.onPaymentError,
+                self.config.data.onError,
                 JSON.stringify(error),
                 true
             ).done(function(response){
@@ -221,6 +233,6 @@ define([
                 console.error(message);
             });
         }
-        
+
     });
 });

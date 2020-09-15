@@ -75,8 +75,8 @@ class AdditionalConfigVars implements ConfigProviderInterface
                 'onPaymentCreated' => $this->urlBuilder->getUrl(
                     'SwedbankPayCheckout/Index/OnPaymentCreated'
                 ),
-                'onPaymentError' => $this->urlBuilder->getUrl(
-                    'SwedbankPayCheckout/Index/OnPaymentError'
+                'onError' => $this->urlBuilder->getUrl(
+                    'SwedbankPayCheckout/Index/OnError'
                 ),
                 'onPaymentFailed' => $this->urlBuilder->getUrl(
                     'SwedbankPayCheckout/Index/OnPaymentFailed'
