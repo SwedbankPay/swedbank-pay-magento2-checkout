@@ -21,19 +21,15 @@ class OnError extends PaymentActionAbstract
         parent::__construct($context, $resultJsonFactory, $eventManager, $configHelper, $logger);
 
         $this->setEventName('error');
-        $this->setEventArgs(['origin', 'messageId', 'details']);
+        $this->setEventArgs(['details']);
         $this->setEventMethod([$this, 'logError']);
     }
 
     /**
-     * @param $origin
-     * @param $messageId
-     * @param $details
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param string $details
      */
-    public function logError($origin, $messageId, $details)
+    public function logError($details)
     {
-        $this->logger->error(sprintf("SwedbankPay Payment Error [%s]: %s", $messageId, $details));
+        $this->logger->error(sprintf("SwedbankPay Payment Error: %s", $details));
     }
 }
