@@ -92,6 +92,8 @@ class QuoteRepositoryPlugin
             return null;
         }
 
+        $returnValue = $proceed($quote);
+
         try {
             $swedbankPayQuote = $this->quoteRepository->getByQuoteId($quote->getId());
 
@@ -118,7 +120,7 @@ class QuoteRepositoryPlugin
             $this->logger->debug(sprintf('SwedbankPay Quote not found with ID # %s', $quote->getId()));
         }
 
-        return $proceed($quote);
+        return $returnValue;
     }
 
     /**
