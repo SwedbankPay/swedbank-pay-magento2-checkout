@@ -13,28 +13,21 @@ use Magento\Payment\Gateway\Command;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order as MageOrder;
-use Magento\Sales\Model\Order\Invoice;
-use Magento\Sales\Model\Order\Invoice\Item as InvoiceItem;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Model\Calculation;
 use Magento\Tax\Model\Config as TaxConfig;
 use SwedbankPay\Api\Client\Exception;
 use SwedbankPay\Api\Service\Data\ResponseInterface;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\DescriptionItem;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\Item\VatSummaryItem;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\ItemDescriptionCollection;
-use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Collection\VatSummaryCollection;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\Transaction;
 use SwedbankPay\Api\Service\Paymentorder\Transaction\Resource\Request\TransactionObject;
+use SwedbankPay\Checkout\Helper\Factory\OrderItemsFactory;
+use SwedbankPay\Checkout\Helper\PaymentData;
 use SwedbankPay\Core\Exception\ServiceException;
-use SwedbankPay\Core\Model\Service as ClientRequestService;
 use SwedbankPay\Core\Exception\SwedbankPayException;
 use SwedbankPay\Core\Logger\Logger;
-use SwedbankPay\Checkout\Helper\PaymentData;
+use SwedbankPay\Core\Model\Service as ClientRequestService;
 
 /**
- * Class Capture
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
@@ -76,6 +69,16 @@ class Capture extends AbstractCommand
     protected $mageOrderRepo;
 
     /**
+     * @var QuoteRe
+     */
+    protected $mageQuoteRepo;
+
+    /**
+     * @var OrderItemsFactory
+     */
+    protected $orderItemsFactory;
+
+    /**
      * Capture constructor.
      *
      * @param ClientRequestService $requestService
@@ -86,6 +89,7 @@ class Capture extends AbstractCommand
      * @param Calculation $calculator
      * @param PriceCurrencyInterface $priceCurrency
      * @param OrderRepositoryInterface $mageOrderRepo
+     * @param OrderItemsFactory $orderItemsFactory
      * @param Logger $logger
      * @param array $data
      */
@@ -98,6 +102,7 @@ class Capture extends AbstractCommand
         Calculation $calculator,
         PriceCurrencyInterface $priceCurrency,
         OrderRepositoryInterface $mageOrderRepo,
+        OrderItemsFactory $orderItemsFactory,
         Logger $logger,
         array $data = []
     ) {
@@ -114,6 +119,7 @@ class Capture extends AbstractCommand
         $this->calculator = $calculator;
         $this->priceCurrency = $priceCurrency;
         $this->mageOrderRepo = $mageOrderRepo;
+        $this->orderItemsFactory = $orderItemsFactory;
     }
 
     /**
@@ -142,14 +148,6 @@ class Capture extends AbstractCommand
         /** @var MageOrder $order */
         $order = $payment->getOrder();
 
-        $invoices = $order->getInvoiceCollection();
-
-        /**
-         * The latest invoice will contain only the selected items(and quantities) for the (partial) capture
-         * @var Invoice $invoice
-         */
-        $invoice = $invoices->getLastItem();
-
         $paymentOrder = $this->paymentData->getByOrder($order);
 
         $this->checkRemainingAmount('capture', $amount, $order, $paymentOrder);
@@ -160,85 +158,14 @@ class Capture extends AbstractCommand
             return null;
         }
 
-        $itemDescriptions = new ItemDescriptionCollection();
-        $vatSummaryRateAmounts = [];
-
-        /** @var InvoiceItem $item */
-        foreach ($invoice->getItemsCollection() as $item) {
-            $itemTotal = ($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) * 100;
-
-            $description = (string)$item->getName();
-            if ($item->getBaseDiscountAmount()) {
-                $formattedDiscountAmount = $this->priceCurrency->format(
-                    $item->getBaseDiscountAmount(),
-                    false,
-                    PriceCurrencyInterface::DEFAULT_PRECISION,
-                    $order->getStoreId()
-                );
-                $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
-            }
-
-            $descriptionItem = new DescriptionItem();
-            $descriptionItem->setAmount($itemTotal)
-                ->setDescription($description);
-            $itemDescriptions->addItem($descriptionItem);
-
-            $rate = (int)$item->getOrderItem()->getTaxPercent() * 100;
-
-            if (!isset($vatSummaryRateAmounts[$rate])) {
-                $vatSummaryRateAmounts[$rate] = ['amount' => 0, 'vat_amount' => 0];
-            }
-
-            $vatSummaryRateAmounts[$rate]['amount'] += $itemTotal;
-            $vatSummaryRateAmounts[$rate]['vat_amount'] += $item->getBaseTaxAmount() * 100;
-        }
-
-        if (!$order->getIsVirtual() && $order->getBaseShippingInclTax() > 0) {
-            $shippingTotal = ($order->getBaseShippingInclTax() - $order->getBaseShippingDiscountAmount()) * 100;
-
-            $description = (string)$order->getShippingDescription();
-            if ($order->getBaseShippingDiscountAmount()) {
-                $formattedDiscountAmount = $this->priceCurrency->format(
-                    $order->getBaseShippingDiscountAmount(),
-                    false,
-                    PriceCurrencyInterface::DEFAULT_PRECISION,
-                    $order->getStoreId()
-                );
-                $description .= ' - ' . __('Including') . ' ' . $formattedDiscountAmount . ' ' . __('discount');
-            }
-
-            $descriptionItem = new DescriptionItem();
-            $descriptionItem->setAmount($shippingTotal)
-                ->setDescription($description);
-            $itemDescriptions->addItem($descriptionItem);
-
-            $rate = (int)$this->getTaxRate($order) * 100;
-
-            if (!isset($vatSummaryRateAmounts[$rate])) {
-                $vatSummaryRateAmounts[$rate] = ['amount' => 0, 'vat_amount' => 0];
-            }
-
-            $vatSummaryRateAmounts[$rate]['amount'] += $shippingTotal;
-            $vatSummaryRateAmounts[$rate]['vat_amount'] += $order->getBaseShippingTaxAmount() * 100;
-        }
-
-        $vatSummaries = new VatSummaryCollection();
-
-        foreach ($vatSummaryRateAmounts as $rate => $amounts) {
-            $vatSummary = new VatSummaryItem();
-            $vatSummary->setAmount($amounts['amount'])
-                ->setVatAmount($amounts['vat_amount'])
-                ->setVatPercent($rate);
-            $vatSummaries->addItem($vatSummary);
-        }
+        $orderItems = $this->orderItemsFactory->createByOrder($order);
 
         $transaction = new Transaction();
         $transaction->setDescription("Capturing the authorized payment")
             ->setAmount($amount * 100)
             ->setVatAmount($order->getBaseTaxAmount() * 100)
             ->setPayeeReference($this->generateRandomString(30))
-            ->setItemDescriptions($itemDescriptions)
-            ->setVatSummary($vatSummaries);
+            ->setOrderItems($orderItems);
 
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);
@@ -269,6 +196,15 @@ class Capture extends AbstractCommand
         }
 
         $this->paymentData->updateRemainingAmounts('capture', $amount, $paymentOrder);
+
+        $transactionNumber = $captureResponseData['capture']['transaction']['number'];
+        $order->setData('swedbank_pay_transaction_number', $transactionNumber);
+        $this->mageOrderRepo->save($order);
+
+        $this->logger->debug(
+            'Saved capture transaction number to order grid',
+            ['order_id' => $order->getEntityId(), 'transaction_no' => $transactionNumber]
+        );
 
         return null;
     }
@@ -306,5 +242,20 @@ class Capture extends AbstractCommand
         );
 
         return $this->calculator->getRate($request->setProductClassId($taxRateId));
+    }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    public function removeInvalidCharacters($str)
+    {
+        // Removes invalid characters
+        $str = preg_replace('/[\x00-\x1F\x7F]/u', '', $str);
+
+        // Removes non-breaking spaces
+        $str = preg_replace('/[\xa0]/u', ' ', $str);
+
+        return $str;
     }
 }

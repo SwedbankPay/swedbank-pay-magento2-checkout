@@ -23,6 +23,9 @@
     "ext-json": "*",
     "php": "~7.0.13||~7.1.0||~7.2.0||~7.3.0",
     "magento/framework": "^100.1||^101.0||^102.0",
+    "magento/module-customer": "^100.1||^101.0||^102.0",
+    "magento/module-sales": "^100.1||^101.0||^102.0",
+    "magento/module-tax": "^100.0",
     "swedbank-pay/magento2-core": "^1.2"
   },
   "repositories": {
@@ -40,12 +43,15 @@
     }
   },
   "require-dev": {
+    "phpunit/phpunit": "^7.5",
     "squizlabs/php_codesniffer": "*",
     "magento/magento-coding-standard": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
+    "test": "phpunit ./Test/",
+    "phpcs": "./vendor/bin/phpcs --standard=Magento2 --report=code --ignore=vendor/* --runtime-set ignore_warnings_on_exit true .",
     "post-install-cmd": [
       "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
     ],

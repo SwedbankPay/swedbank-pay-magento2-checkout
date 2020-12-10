@@ -73,7 +73,7 @@ class PaymentData
         );
 
         throw new NoSuchEntityException(
-            new Phrase(sprintf("Unable to find a SwedbankPay payment matching order %s", $order->getIncrementId()))
+            new Phrase(sprintf("Unable to find a SwedbankPay payment matching order"))
         );
     }
 

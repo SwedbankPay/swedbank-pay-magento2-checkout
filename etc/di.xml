@@ -12,6 +12,15 @@
         </arguments>
     </type>
 
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid"
+                 type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="swedbank_pay_transaction_number" xsi:type="string">sales_order.swedbank_pay_transaction_number</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <preference for="SwedbankPay\Checkout\Api\QuoteRepositoryInterface" type="SwedbankPay\Checkout\Model\ResourceModel\QuoteRepository"/>
     <preference for="SwedbankPay\Checkout\Api\Data\QuoteInterface" type="SwedbankPay\Checkout\Model\Quote"/>
     <preference for="SwedbankPay\Checkout\Api\Data\QuoteSearchResultInterface" type="SwedbankPay\Checkout\Model\QuoteSearchResult"/>

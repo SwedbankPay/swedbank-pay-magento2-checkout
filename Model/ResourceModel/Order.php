@@ -6,8 +6,6 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 
 /**
- * Class Order
- *
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 class Order extends AbstractDb

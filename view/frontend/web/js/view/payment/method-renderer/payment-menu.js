@@ -51,6 +51,13 @@ define([
 
                 self.totals = totals;
             });
+
+            window.onfocus = function () {
+                if (typeof payex.hostedView.paymentMenu !== "undefined") {
+                    console.log('SwedbankPay hosted view was refreshed');
+                    payex.hostedView.paymentMenu().refresh();
+                }
+            }
         },
         clearPaymentMenu: function(){
             if (typeof payex.hostedView.paymentMenu !== "undefined") {
@@ -61,9 +68,23 @@ define([
             $('#swedbank-pay-checkout').empty();
         },
         updatePaymentMenuScript: function(){
-            let self = this;
+            var self = this;
 
             fullscreenLoader.startLoader();
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const state = urlParams.get('state');
+            const paymentScriptUrl = window.sessionStorage.getItem('paymentScript');
+
+            if (state != null && state.toLowerCase() === 'redirected' && paymentScriptUrl != null) {
+                self.clearPaymentMenu();
+                self.renderPaymentMenuScript(paymentScriptUrl);
+
+                self.paymentScript = paymentScriptUrl;
+                fullscreenLoader.stopLoader();
+                return;
+            }
 
             storage.get(
                 self.config.data.onUpdated,
@@ -75,6 +96,7 @@ define([
                     self.renderPaymentMenuScript(response.result);
 
                     self.paymentScript = response.result;
+                    window.sessionStorage.setItem('paymentScript', response.result);
                     fullscreenLoader.stopLoader();
                 }
             }).fail(function(message){
@@ -115,7 +137,7 @@ define([
             openShippingInformation.open();
         },
         onPaymentCompleted: function(paymentCompletedEvent) {
-            let self = this;
+            var self = this;
             fullscreenLoader.startLoader();
 
             storage.post(
@@ -128,14 +150,17 @@ define([
                     fullscreenLoader.stopLoader();
                     self.updatePaymentMenuScript();
                     self.onShippingInfoNotValid();
+
+                    self.logError('Could not place order in Magento');
                 }
-            }).fail(function(message){
-                console.error(message);
+            }).fail(function(message) {
                 fullscreenLoader.stopLoader();
+                console.error(message);
+                self.logError(message);
             });
         },
         onPaymentFailed: function(paymentFailedEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentFailed,
@@ -148,7 +173,7 @@ define([
             });
         },
         onPaymentCreated: function(paymentCreatedEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentCreated,
@@ -161,7 +186,7 @@ define([
             });
         },
         onPaymentToS: function(paymentToSEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentToS,
@@ -175,7 +200,7 @@ define([
             });
         },
         onPaymentMenuInstrumentSelected: function(paymentMenuInstrumentSelectedEvent) {
-            let self = this;
+            var self = this;
 
             storage.post(
                 self.config.data.onPaymentMenuInstrumentSelected,
@@ -187,10 +212,19 @@ define([
             });
         },
         onError: function(error) {
-            let self = this;
+            var self = this;
+
+            self.logError(error);
+        },
+        logError: function(details) {
+            var self = this;
+
+            var error = {
+                details: details
+            };
 
             storage.post(
-                self.config.data.onPaymentError,
+                self.config.data.onError,
                 JSON.stringify(error),
                 true
             ).done(function(response){
@@ -199,6 +233,6 @@ define([
                 console.error(message);
             });
         }
-        
+
     });
 });

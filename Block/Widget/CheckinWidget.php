@@ -23,8 +23,6 @@ use SwedbankPay\Core\Model\Service;
 use SwedbankPay\Core\Logger\Logger;
 
 /**
- * Class CheckinWidget
- *
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

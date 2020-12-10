@@ -2,14 +2,17 @@
 
 namespace SwedbankPay\Checkout\Block\Adminhtml\Order\View;
 
+use Exception;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Exception\NoSuchEntityException;
-use SwedbankPay\Api\Client\Exception;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderRepository;
+use SwedbankPay\Api\Client\Exception as ClientException;
 use SwedbankPay\Api\Service\Paymentorder\Request\GetCurrentPayment;
+use SwedbankPay\Checkout\Api\OrderRepositoryInterface as PaymentOrderRepository;
 use SwedbankPay\Core\Exception\ServiceException;
 use SwedbankPay\Core\Model\Service;
-use SwedbankPay\Checkout\Api\OrderRepositoryInterface as PaymentOrderRepository;
 
 class PaymentInfo extends Template
 {
@@ -24,21 +27,29 @@ class PaymentInfo extends Template
     protected $paymentOrderRepo;
 
     /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
      * PaymentInfo constructor.
      * @param Context $context
      * @param array $data
      * @param Service $service
      * @param PaymentOrderRepository $paymentOrderRepo
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
         Context $context,
-        /** @noinspection PhpOptionalBeforeRequiredParametersInspection */ array $data = [],
-        /** phpcs:disable */Service $service,
-        PaymentOrderRepository $paymentOrderRepo /** phpcs:enable */
+        Service $service,
+        PaymentOrderRepository $paymentOrderRepo,
+        OrderRepository $orderRepository,
+        array $data = []
     ) {
         parent::__construct($context, $data);
         $this->service = $service;
         $this->paymentOrderRepo = $paymentOrderRepo;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -61,7 +72,7 @@ class PaymentInfo extends Template
 
         try {
             return $serviceRequest->send()->getResponseData();
-        } catch (Exception $e) {
+        } catch (ClientException $e) {
             return null;
         }
     }
@@ -94,5 +105,22 @@ class PaymentInfo extends Template
         }
 
         return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSwedbankPayTransactionNumber()
+    {
+        $orderId = $this->getRequest()->getParam('order_id');
+
+        try {
+            /** @var Order $order */
+            $order = $this->orderRepository->get($orderId);
+        } catch (Exception $e) {
+            return null;
+        }
+
+        return $order->getData('swedbank_pay_transaction_number');
     }
 }
