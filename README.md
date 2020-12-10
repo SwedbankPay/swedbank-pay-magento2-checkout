@@ -109,6 +109,15 @@ with configurable options as follows:
 * **Enabled**: Enable to active Swedbank Pay payment menu.
 * **Terms of Service Page**: Set page to link as terms of service page in checkout.
 
+## FAQ
+**Q:** Is it possible to disable customer's checkin?  
+**A:** The checkin part of the module can be made optional by allowing guest login. This can be done by setting **Checkin Required** to **No** inside **Checkout Configuration**
+
+**Q:** How can we test the module using test credentials?  
+**A:** To be able to use test credentials, you can enable test mode by setting **Test Mode** to **Yes** inside **Core Configuration**. For in-depth logging, you can also enable debug mode by setting **Debug Mode** to **Yes**  
+  
+Please note: Remember to disable **Test Mode** in production site as test credentials should only be used for testing purposes.  
+
 ## Support
 
 To find the customer service available in your country, please visit
