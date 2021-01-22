@@ -89,7 +89,7 @@ class QuoteRepositoryPlugin
         MageQuote $quote
     ) {
         if (!$this->config->isActive()) {
-            return null;
+            return $proceed($quote);
         }
 
         $returnValue = $proceed($quote);
