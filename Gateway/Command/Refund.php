@@ -116,9 +116,7 @@ class Refund extends AbstractCommand
             'TransactionReversal',
             $transactionObject
         );
-        $reversalRequest->setRequestEndpointVars(
-            $this->getSwedbankPayPaymentResourceId($paymentOrder->getPaymentOrderId())
-        );
+        $reversalRequest->setPaymentOrderId($paymentOrder->getPaymentIdPath());
 
         /** @var ResponseInterface $reversalResponse */
         $reversalResponse = $reversalRequest->send();

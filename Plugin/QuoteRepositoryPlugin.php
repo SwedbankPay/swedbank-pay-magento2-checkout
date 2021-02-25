@@ -115,9 +115,13 @@ class QuoteRepositoryPlugin
             $swedbankPayQuote->setRemainingReversalAmount(0);
 
             $this->quoteRepository->save($swedbankPayQuote);
-
         } catch (NoSuchEntityException $e) {
-            $this->logger->debug(sprintf('SwedbankPay Quote not found with ID # %s', $quote->getId()));
+            $this->logger->debug(sprintf(
+                'No SwedbankPay Quote record has been created yet with ID # %s',
+                $quote->getId()
+            ));
+
+            $this->logger->debug(sprintf('SwedbankPay Quote update skipped!'));
         }
 
         return $returnValue;
@@ -147,7 +151,7 @@ class QuoteRepositoryPlugin
         $paymentOrderObject = $this->paymentorder->createPaymentorderUpdateObject($mageQuote);
 
         $updateRequest = $this->service->init('Paymentorder', 'updateOrder', $paymentOrderObject);
-        $updateRequest->setRequestEndpointVars($swedbankPayQuote->getPaymentOrderId());
+        $updateRequest->setPaymentOrderId($swedbankPayQuote->getPaymentIdPath());
         $updateRequest->send();
     }
 

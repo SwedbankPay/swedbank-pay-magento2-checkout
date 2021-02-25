@@ -67,7 +67,7 @@ class PaymentDataTest extends TestCase
 
         $this->expectException(NoSuchEntityException::class);
         $this->expectExceptionMessage(
-            sprintf("Unable to find a SwedbankPay payment matching Payment ID:\n%s", $paymentOrderId)
+            sprintf("Unable to find a SwedbankPay payment matching Payment Order ID:\n%s", $paymentOrderId)
         );
 
         $this->paymentData->getByPaymentOrderId($paymentOrderId);

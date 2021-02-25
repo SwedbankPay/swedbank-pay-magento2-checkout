@@ -175,9 +175,7 @@ class Capture extends AbstractCommand
             'TransactionCapture',
             $transactionObject
         );
-        $captureRequest->setRequestEndpointVars(
-            $this->getSwedbankPayPaymentResourceId($paymentOrder->getPaymentOrderId())
-        );
+        $captureRequest->setPaymentOrderId($paymentOrder->getPaymentIdPath());
 
         /** @var ResponseInterface $captureResponse */
         $captureResponse = $captureRequest->send();

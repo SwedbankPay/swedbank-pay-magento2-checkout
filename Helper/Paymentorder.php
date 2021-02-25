@@ -432,6 +432,7 @@ class Paymentorder
         }
 
         $quote->setPaymentOrderId($this->getSwedbankPayPaymentorderId($response['payment_order']['id']));
+        $quote->setPaymentIdPath($response['payment_order']['id']);
         $quote->setDescription($response['payment_order']['description']);
         $quote->setOperation($response['payment_order']['operation']);
         $quote->setState($response['payment_order']['state']);

@@ -93,7 +93,10 @@ class PaymentData
         try {
             $paymentData = $this->paymentOrderRepo->getByPaymentOrderId($paymentOrderId);
         } catch (NoSuchEntityException $e) {
-            $this->logger->debug(sprintf('SwedbankPay Order not found with ID # %s', $paymentOrderId));
+            $this->logger->debug(sprintf(
+                'No SwedbankPay Order record has been created yet with Payment Order ID: %s',
+                $paymentOrderId
+            ));
         }
 
         if ($paymentData instanceof PaymentOrderInterface) {
@@ -103,14 +106,20 @@ class PaymentData
         try {
             $paymentData = $this->paymentQuoteRepo->getByPaymentOrderId($paymentOrderId);
         } catch (NoSuchEntityException $e) {
-            $this->logger->debug(sprintf('SwedbankPay Quote not found with ID # %s', $paymentOrderId));
+            $this->logger->debug(sprintf(
+                'SwedbankPay Quote not found with Payment Order ID: %s',
+                $paymentOrderId
+            ));
         }
 
         if ($paymentData instanceof PaymentQuoteInterface) {
             return $paymentData;
         }
 
-        $errorMessage = sprintf("Unable to find a SwedbankPay payment matching Payment ID:\n%s", $paymentOrderId);
+        $errorMessage = sprintf(
+            "Unable to find a SwedbankPay payment matching Payment Order ID:\n%s",
+            $paymentOrderId
+        );
 
         $this->logger->error(
             $errorMessage
@@ -151,18 +160,20 @@ class PaymentData
      */
     public function updateRemainingAmounts($command, $amount, $order)
     {
+        $amountInSubUnit = (int) round($amount * 100);
+
         switch ($command) {
             case 'capture':
-                $order->setRemainingCapturingAmount($order->getRemainingCapturingAmount() - ($amount * 100));
+                $order->setRemainingCapturingAmount($order->getRemainingCapturingAmount() - $amountInSubUnit);
                 $order->setRemainingCancellationAmount($order->getRemainingCapturingAmount());
-                $order->setRemainingReversalAmount($order->getRemainingReversalAmount() + ($amount * 100));
+                $order->setRemainingReversalAmount($order->getRemainingReversalAmount() + $amountInSubUnit);
                 break;
             case 'cancel':
-                $order->setRemainingCancellationAmount($order->getRemainingCancellationAmount() - ($amount * 100));
+                $order->setRemainingCancellationAmount($order->getRemainingCancellationAmount() - $amountInSubUnit);
                 $order->setRemainingCapturingAmount($order->getRemainingCancellationAmount());
                 break;
             case 'refund':
-                $order->setRemainingReversalAmount($order->getRemainingReversalAmount() - ($amount * 100));
+                $order->setRemainingReversalAmount($order->getRemainingReversalAmount() - $amountInSubUnit);
                 break;
         }
 
