@@ -54,6 +54,23 @@ class Quote extends AbstractExtensibleModel implements QuoteInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getPaymentIdPath()
+    {
+        return $this->_getData(self::PAYMENT_ID_PATH);
+    }
+
+    /**
+     * @param string $paymentIdPath
+     * @return void
+     */
+    public function setPaymentIdPath($paymentIdPath)
+    {
+        $this->setData(self::PAYMENT_ID_PATH, $paymentIdPath);
+    }
+
+    /**
      * @return string
      */
     public function getDescription()
