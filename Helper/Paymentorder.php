@@ -160,6 +160,7 @@ class Paymentorder
      * @return PaymentorderObject
      * @throws NoSuchEntityException
      * @throws LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createPaymentorderObject($consumerProfileRef = null)
     {
@@ -176,7 +177,6 @@ class Paymentorder
         $urlData = $this->createUrlObject();
         $payeeInfo = $this->createPayeeInfoObject();
         $orderItems = $this->createOrderItemsObject($mageQuote);
-        $payer = $this->createPayerObject($mageQuote);
         $riskIndicator = $this->createRiskIndicatorObject($mageQuote);
 
         /**
@@ -184,10 +184,6 @@ class Paymentorder
          *
          * $paymentOrderItems = $this->createItemsObject();
          */
-
-        if ($consumerProfileRef) {
-            $payer->setConsumerProfileRef($consumerProfileRef);
-        }
 
         $storeName = $this->scopeConfig->getValue(
             'general/store_information/name',
@@ -207,7 +203,6 @@ class Paymentorder
             ->setUrls($urlData)
             ->setPayeeInfo($payeeInfo)
             ->setOrderItems($orderItems)
-            ->setPayer($payer)
             ->setRiskIndicator($riskIndicator);
 
         if (isset($paymentorderItems) && ($paymentorderItems instanceof PaymentorderItemsCollection)) {
