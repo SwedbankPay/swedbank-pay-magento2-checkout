@@ -34,7 +34,6 @@ class PayerFactory
 
         $payer = new PaymentorderPayer();
         $payer->setEmail($quote->getShippingAddress()->getEmail())
-            ->setMsisdn($quote->getShippingAddress()->getTelephone())
             ->setShippingAddress($shippingAddress);
 
         return $payer;
