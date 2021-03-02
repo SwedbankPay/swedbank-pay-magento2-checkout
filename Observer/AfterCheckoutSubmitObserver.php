@@ -3,10 +3,10 @@
 namespace SwedbankPay\Checkout\Observer;
 
 use Exception;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
@@ -17,6 +17,7 @@ use SwedbankPay\Api\Service\Paymentorder\Resource\Response\Data\GetCurrentPaymen
 use SwedbankPay\Checkout\Api\Data\OrderInterface as PaymentOrderInterface;
 use SwedbankPay\Checkout\Helper\Config as ConfigHelper;
 use SwedbankPay\Checkout\Helper\PaymentData;
+use SwedbankPay\Checkout\Model\ConsumerSession;
 use SwedbankPay\Checkout\Model\Ui\ConfigProvider;
 use SwedbankPay\Core\Helper\Order as OrderHelper;
 use SwedbankPay\Core\Logger\Logger;
@@ -43,6 +44,11 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
     protected $clientService;
 
     /**
+     * @var ConsumerSession
+     */
+    protected $consumerSession;
+
+    /**
      * @var OrderHelper
      */
     protected $orderHelper;
@@ -61,6 +67,7 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
         ConfigHelper $configHelper,
         PaymentData $paymentData,
         ClientService $clientService,
+        ConsumerSession $consumerSession,
         OrderHelper $orderHelper,
         OrderRepository $orderRepository,
         Logger $logger
@@ -68,6 +75,7 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
         $this->configHelper = $configHelper;
         $this->paymentData = $paymentData;
         $this->clientService = $clientService;
+        $this->consumerSession = $consumerSession;
         $this->orderHelper = $orderHelper;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
@@ -111,12 +119,15 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
 
         /** @var GetCurrentPayment $currentPaymentRequest */
         $currentPaymentRequest = $this->clientService->init('Paymentorder', 'GetCurrentPayment');
+        $this->logger->debug('Payment ID Path: '. $paymentData->getPaymentIdPath());
         $currentPaymentRequest->setPaymentOrderId($paymentData->getPaymentIdPath());
 
         /** @var GetCurrentPaymentInterface $currentPayment */
         $currentPayment = $currentPaymentRequest->send()->getResponseResource();
         $paymentData->setIntent($currentPayment->getPayment()->getIntent());
         $this->paymentData->update($paymentData);
+
+        $this->consumerSession->setViewOperation(false);
 
         if ($paymentData->getIntent() == 'Sale') {
             $this->saveTransactionNumber($order, $currentPayment);

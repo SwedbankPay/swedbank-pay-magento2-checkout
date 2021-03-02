@@ -96,7 +96,11 @@ class OrderRepositoryPlugin
                 return $mageOrder;
             }
         } catch (Exception $e) {
-            $this->logger->debug(sprintf('SwedbankPay Order not found with ID # %s', $mageOrder->getEntityId()));
+            $this->logger->debug(sprintf(
+                'No SwedbankPay Order record has been created yet with ID # %s',
+                $mageOrder->getEntityId()
+            ));
+            $this->logger->debug('Creating new SwedbankPay Order...');
         }
 
         /** @var \SwedbankPay\Checkout\Model\Order $swedbankPayOrder */

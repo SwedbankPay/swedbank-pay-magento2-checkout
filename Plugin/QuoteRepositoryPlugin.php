@@ -134,11 +134,13 @@ class QuoteRepositoryPlugin
      */
     public function updatePaymentorder(MageQuote $mageQuote, SwedbankPayQuote $swedbankPayQuote)
     {
+        $quoteTotal = (int) round($mageQuote->getGrandTotal() * 100);
+
         $this->logger->debug('UpdateOrder request is called');
         $this->logger->debug('SwedbankPayQuote Total: ' . $swedbankPayQuote->getAmount());
-        $this->logger->debug('Quote Grand Total: ' . $mageQuote->getGrandTotal() * 100);
+        $this->logger->debug('Quote Grand Total: ' . $quoteTotal);
 
-        if ($swedbankPayQuote->getAmount() == ($mageQuote->getGrandTotal() * 100)) {
+        if ($swedbankPayQuote->getAmount() == $quoteTotal) {
             $this->logger->debug('UpdateOrder operation is skipped as the amount is unchanged');
             return;
         }
