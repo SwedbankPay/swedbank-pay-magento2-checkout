@@ -54,6 +54,23 @@ class Order extends AbstractExtensibleModel implements OrderInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getPaymentOrderIdPath()
+    {
+        return $this->_getData(self::PAYMENT_ORDER_ID_PATH);
+    }
+
+    /**
+     * @param string $paymentIdPath
+     * @return void
+     */
+    public function setPaymentOrderIdPath($paymentIdPath)
+    {
+        $this->setData(self::PAYMENT_ORDER_ID_PATH, $paymentIdPath);
+    }
+
+    /**
      * @return string
      */
     public function getDescription()

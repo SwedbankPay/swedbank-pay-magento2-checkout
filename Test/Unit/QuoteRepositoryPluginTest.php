@@ -178,7 +178,7 @@ class QuoteRepositoryPluginTest extends TestCase
             ->willReturn($paymentOrderId);
 
         $this->service->expects($this->once())->method('init')->willReturn($this->updateRequest);
-        $this->updateRequest->expects($this->once())->method('setRequestEndpointVars');
+        $this->updateRequest->expects($this->once())->method('setPaymentOrderId');
         $this->updateRequest->expects($this->once())->method('send');
 
         $this->quoteRepositoryPlugin->updatePaymentorder($this->mageQuote, $this->swedbankPayQuote);

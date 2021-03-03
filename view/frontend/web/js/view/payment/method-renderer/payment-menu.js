@@ -116,6 +116,7 @@ define([
             script.onload = function(){
                 if(self.paymentScript == scriptSrc) {
                     self.swedbankPaySetupHostedView();
+                    $('#swedbank_pay_checkout').click();
                 }
             };
 

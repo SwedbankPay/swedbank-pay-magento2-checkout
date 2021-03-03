@@ -115,9 +115,13 @@ class QuoteRepositoryPlugin
             $swedbankPayQuote->setRemainingReversalAmount(0);
 
             $this->quoteRepository->save($swedbankPayQuote);
-
         } catch (NoSuchEntityException $e) {
-            $this->logger->debug(sprintf('SwedbankPay Quote not found with ID # %s', $quote->getId()));
+            $this->logger->debug(sprintf(
+                'No SwedbankPay Quote record has been created yet with ID # %s',
+                $quote->getId()
+            ));
+
+            $this->logger->debug(sprintf('SwedbankPay Quote update skipped!'));
         }
 
         return $returnValue;
@@ -130,11 +134,13 @@ class QuoteRepositoryPlugin
      */
     public function updatePaymentorder(MageQuote $mageQuote, SwedbankPayQuote $swedbankPayQuote)
     {
+        $quoteTotal = (int) round($mageQuote->getGrandTotal() * 100);
+
         $this->logger->debug('UpdateOrder request is called');
         $this->logger->debug('SwedbankPayQuote Total: ' . $swedbankPayQuote->getAmount());
-        $this->logger->debug('Quote Grand Total: ' . $mageQuote->getGrandTotal() * 100);
+        $this->logger->debug('Quote Grand Total: ' . $quoteTotal);
 
-        if ($swedbankPayQuote->getAmount() == ($mageQuote->getGrandTotal() * 100)) {
+        if ($swedbankPayQuote->getAmount() == $quoteTotal) {
             $this->logger->debug('UpdateOrder operation is skipped as the amount is unchanged');
             return;
         }
@@ -147,7 +153,7 @@ class QuoteRepositoryPlugin
         $paymentOrderObject = $this->paymentorder->createPaymentorderUpdateObject($mageQuote);
 
         $updateRequest = $this->service->init('Paymentorder', 'updateOrder', $paymentOrderObject);
-        $updateRequest->setRequestEndpointVars($swedbankPayQuote->getPaymentOrderId());
+        $updateRequest->setPaymentOrderId($swedbankPayQuote->getPaymentOrderIdPath());
         $updateRequest->send();
     }
 

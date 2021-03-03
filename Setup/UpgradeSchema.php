@@ -49,6 +49,35 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 );
         }
 
+        $swedbankPayQuoteTable = 'swedbank_pay_quotes';
+        $swedbankPayOrderTable = 'swedbank_pay_orders';
+
+        if (version_compare($context->getVersion(), "1.3.0", "<")) {
+            // Swedbank Pay Quotes table
+            $setup->getConnection()
+                ->addColumn(
+                    $setup->getTable($swedbankPayQuoteTable),
+                    'payment_order_id_path',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => 255,
+                        'comment' =>'SwedbankPay Payment Order ID Path'
+                    ]
+                );
+
+            // Swedbank Pay Orders table
+            $setup->getConnection()
+                ->addColumn(
+                    $setup->getTable($swedbankPayOrderTable),
+                    'payment_order_id_path',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => 255,
+                        'comment' =>'SwedbankPay Payment Order ID Path'
+                    ]
+                );
+        }
+
         $setup->endSetup();
     }
 }

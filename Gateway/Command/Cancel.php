@@ -104,10 +104,12 @@ class Cancel extends AbstractCommand
         $transactionObject = new TransactionObject();
         $transactionObject->setTransaction($transaction);
 
-        $cancelRequest = $this->getRequestService('Paymentorder/Transaction', 'TransactionCancel', $transactionObject);
-        $cancelRequest->setRequestEndpointVars(
-            $this->getSwedbankPayPaymentResourceId($paymentOrder->getPaymentOrderId())
+        $cancelRequest = $this->getRequestService(
+            'Paymentorder/Transaction',
+            'TransactionCancel',
+            $transactionObject
         );
+        $cancelRequest->setPaymentOrderId($paymentOrder->getPaymentOrderIdPath());
 
         /** @var ResponseInterface $cancelResponse */
         $cancelResponse = $cancelRequest->send();

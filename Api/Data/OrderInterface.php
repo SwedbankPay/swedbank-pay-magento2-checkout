@@ -8,6 +8,7 @@ interface OrderInterface extends ExtensibleDataInterface
 {
     const ID = 'id';
     const PAYMENT_ORDER_ID = 'payment_order_id';
+    const PAYMENT_ORDER_ID_PATH = 'payment_order_id_path';
     const DESCRIPTION = 'description';
     const OPERATION = 'operation';
     const INTENT = 'intent';
@@ -44,6 +45,17 @@ interface OrderInterface extends ExtensibleDataInterface
      * @return void
      */
     public function setPaymentOrderId($paymentOrderId);
+
+    /**
+     * @return string|null
+     */
+    public function getPaymentOrderIdPath();
+
+    /**
+     * @param string $paymentIdPath
+     * @return void
+     */
+    public function setPaymentOrderIdPath($paymentIdPath);
 
     /**
      * @return string
