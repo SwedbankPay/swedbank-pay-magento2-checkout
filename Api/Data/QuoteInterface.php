@@ -8,7 +8,7 @@ interface QuoteInterface extends ExtensibleDataInterface
 {
     const ID = 'id';
     const PAYMENT_ORDER_ID = 'payment_order_id';
-    const PAYMENT_ID_PATH = 'payment_id_path';
+    const PAYMENT_ORDER_ID_PATH = 'payment_order_id_path';
     const DESCRIPTION = 'description';
     const OPERATION = 'operation';
     const STATE = 'state';
@@ -49,13 +49,13 @@ interface QuoteInterface extends ExtensibleDataInterface
     /**
      * @return string|null
      */
-    public function getPaymentIdPath();
+    public function getPaymentOrderIdPath();
 
     /**
      * @param string $paymentIdPath
      * @return void
      */
-    public function setPaymentIdPath($paymentIdPath);
+    public function setPaymentOrderIdPath($paymentIdPath);
 
     /**
      * @return string

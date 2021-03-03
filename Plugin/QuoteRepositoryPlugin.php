@@ -153,7 +153,7 @@ class QuoteRepositoryPlugin
         $paymentOrderObject = $this->paymentorder->createPaymentorderUpdateObject($mageQuote);
 
         $updateRequest = $this->service->init('Paymentorder', 'updateOrder', $paymentOrderObject);
-        $updateRequest->setPaymentOrderId($swedbankPayQuote->getPaymentIdPath());
+        $updateRequest->setPaymentOrderId($swedbankPayQuote->getPaymentOrderIdPath());
         $updateRequest->send();
     }
 

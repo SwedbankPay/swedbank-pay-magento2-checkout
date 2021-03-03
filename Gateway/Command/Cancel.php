@@ -109,7 +109,7 @@ class Cancel extends AbstractCommand
             'TransactionCancel',
             $transactionObject
         );
-        $cancelRequest->setPaymentOrderId($paymentOrder->getPaymentIdPath());
+        $cancelRequest->setPaymentOrderId($paymentOrder->getPaymentOrderIdPath());
 
         /** @var ResponseInterface $cancelResponse */
         $cancelResponse = $cancelRequest->send();

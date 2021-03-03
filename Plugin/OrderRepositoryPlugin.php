@@ -108,7 +108,7 @@ class OrderRepositoryPlugin
 
         $swedbankPayOrder->setState($swedbankPayQuote->getState());
         $swedbankPayOrder->setPaymentOrderId($swedbankPayQuote->getPaymentOrderId());
-        $swedbankPayOrder->setPaymentIdPath($swedbankPayQuote->getPaymentIdPath());
+        $swedbankPayOrder->setPaymentOrderIdPath($swedbankPayQuote->getPaymentOrderIdPath());
         $swedbankPayOrder->setCreatedAt($swedbankPayQuote->getCreatedAt());
         $swedbankPayOrder->setUpdatedAt($swedbankPayQuote->getUpdatedAt());
         $swedbankPayOrder->setOperation($swedbankPayQuote->getOperation());

@@ -57,11 +57,11 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()
                 ->addColumn(
                     $setup->getTable($swedbankPayQuoteTable),
-                    'payment_id_path',
+                    'payment_order_id_path',
                     [
                         'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                         'length' => 255,
-                        'comment' =>'SwedbankPay Payment ID Path'
+                        'comment' =>'SwedbankPay Payment Order ID Path'
                     ]
                 );
 
@@ -69,11 +69,11 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()
                 ->addColumn(
                     $setup->getTable($swedbankPayOrderTable),
-                    'payment_id_path',
+                    'payment_order_id_path',
                     [
                         'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                         'length' => 255,
-                        'comment' =>'SwedbankPay Payment ID Path'
+                        'comment' =>'SwedbankPay Payment Order ID Path'
                     ]
                 );
         }

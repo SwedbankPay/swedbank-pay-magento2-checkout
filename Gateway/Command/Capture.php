@@ -175,7 +175,7 @@ class Capture extends AbstractCommand
             'TransactionCapture',
             $transactionObject
         );
-        $captureRequest->setPaymentOrderId($paymentOrder->getPaymentIdPath());
+        $captureRequest->setPaymentOrderId($paymentOrder->getPaymentOrderIdPath());
 
         /** @var ResponseInterface $captureResponse */
         $captureResponse = $captureRequest->send();

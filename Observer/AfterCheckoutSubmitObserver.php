@@ -119,8 +119,8 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
 
         /** @var GetCurrentPayment $currentPaymentRequest */
         $currentPaymentRequest = $this->clientService->init('Paymentorder', 'GetCurrentPayment');
-        $this->logger->debug('Payment ID Path: '. $paymentData->getPaymentIdPath());
-        $currentPaymentRequest->setPaymentOrderId($paymentData->getPaymentIdPath());
+        $this->logger->debug('Payment ID Path: '. $paymentData->getPaymentOrderIdPath());
+        $currentPaymentRequest->setPaymentOrderId($paymentData->getPaymentOrderIdPath());
 
         /** @var GetCurrentPaymentInterface $currentPayment */
         $currentPayment = $currentPaymentRequest->send()->getResponseResource();

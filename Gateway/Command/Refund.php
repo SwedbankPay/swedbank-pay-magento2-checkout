@@ -116,7 +116,7 @@ class Refund extends AbstractCommand
             'TransactionReversal',
             $transactionObject
         );
-        $reversalRequest->setPaymentOrderId($paymentOrder->getPaymentIdPath());
+        $reversalRequest->setPaymentOrderId($paymentOrder->getPaymentOrderIdPath());
 
         /** @var ResponseInterface $reversalResponse */
         $reversalResponse = $reversalRequest->send();
