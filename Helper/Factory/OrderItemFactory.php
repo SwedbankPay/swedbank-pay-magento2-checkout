@@ -46,7 +46,7 @@ class OrderItemFactory
     public function createByQuoteItem(QuoteItem $quoteItem)
     {
         $reference = $this->getReference($quoteItem->getSku());
-        $name = $quoteItem->getName();
+        $name = $this->removeInvalidCharacters($quoteItem->getName());
         $type = 'PRODUCT';
         $itemClass = $this->getItemClass($quoteItem->getProduct()->getId());
         $quantity = (float) $quoteItem->getQty();
@@ -79,7 +79,7 @@ class OrderItemFactory
     public function createByOrderItem(OrderItemInterface $orderItem)
     {
         $reference = $this->getReference($orderItem->getSku());
-        $name = $orderItem->getName();
+        $name = $this->removeInvalidCharacters($orderItem->getName());
         $type = 'PRODUCT';
         $itemClass = $this->getItemClass($orderItem->getProductId());
         $quantity = (float) $orderItem->getQtyOrdered();
@@ -297,5 +297,17 @@ class OrderItemFactory
     protected function isDecimal($num)
     {
         return is_numeric($num) && floor($num) != $num;
+    }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    public function removeInvalidCharacters($str)
+    {
+        // Removes invalid characters
+        $str = preg_replace('/[^ \w-]/', '_', $str);
+
+        return $str;
     }
 }

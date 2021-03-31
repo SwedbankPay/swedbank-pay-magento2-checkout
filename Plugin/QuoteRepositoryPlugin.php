@@ -140,6 +140,11 @@ class QuoteRepositoryPlugin
         $this->logger->debug('SwedbankPayQuote Total: ' . $swedbankPayQuote->getAmount());
         $this->logger->debug('Quote Grand Total: ' . $quoteTotal);
 
+        if ($quoteTotal == 0) {
+            $this->logger->debug('UpdateOrder operation is skipped as the quote is empty');
+            return;
+        }
+
         if ($swedbankPayQuote->getAmount() == $quoteTotal) {
             $this->logger->debug('UpdateOrder operation is skipped as the amount is unchanged');
             return;
