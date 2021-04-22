@@ -75,7 +75,6 @@ class OrderRepositoryPlugin
      * @param MagentoOrderRepository $subject
      * @param OrderInterface $mageOrder
      * @return OrderInterface
-     * @throws NoSuchEntityException
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.EmptyCatchBlock)
@@ -89,7 +88,14 @@ class OrderRepositoryPlugin
             return $mageOrder;
         }
 
-        $swedbankPayQuote = $this->quoteRepository->getByQuoteId($mageOrder->getQuoteId());
+        $this->logger->debug( __CLASS__ . ' is called!');
+
+        try {
+            $swedbankPayQuote = $this->quoteRepository->getByQuoteId($mageOrder->getQuoteId());
+        } catch (NoSuchEntityException $e) {
+            $this->logger->debug('SwedbankPay Order creation is skipped!');
+            return $mageOrder;
+        }
 
         try {
             if ($this->orderRepository->getByOrderId($mageOrder->getEntityId())) {
@@ -97,10 +103,11 @@ class OrderRepositoryPlugin
             }
         } catch (Exception $e) {
             $this->logger->debug(sprintf(
-                'No SwedbankPay Order record has been created yet with ID # %s',
-                $mageOrder->getEntityId()
+                '%s # %s. %s',
+                'No SwedbankPay Order record has been created yet with ID',
+                $mageOrder->getEntityId(),
+                'Creating new SwedbankPay Order...'
             ));
-            $this->logger->debug('Creating new SwedbankPay Order...');
         }
 
         /** @var \SwedbankPay\Checkout\Model\Order $swedbankPayOrder */

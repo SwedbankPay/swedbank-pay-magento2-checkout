@@ -92,6 +92,8 @@ class QuoteRepositoryPlugin
             return $proceed($quote);
         }
 
+        $this->logger->debug( __CLASS__ . ' is called!');
+
         $returnValue = $proceed($quote);
 
         try {
@@ -117,11 +119,11 @@ class QuoteRepositoryPlugin
             $this->quoteRepository->save($swedbankPayQuote);
         } catch (NoSuchEntityException $e) {
             $this->logger->debug(sprintf(
-                'No SwedbankPay Quote record has been created yet with ID # %s',
-                $quote->getId()
+                '%s # %s. %s',
+                'No SwedbankPay Quote record has been created yet with ID',
+                $quote->getId(),
+                'SwedbankPay Quote update is skipped!'
             ));
-
-            $this->logger->debug(sprintf('SwedbankPay Quote update skipped!'));
         }
 
         return $returnValue;
