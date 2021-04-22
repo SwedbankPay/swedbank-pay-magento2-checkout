@@ -85,24 +85,29 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
      * checkout_submit_all_after event handler.
      *
      * @param Observer $observer
-     * @throws NoSuchEntityException
-     * @throws LocalizedException
      * @throws Exception
      *
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function execute(Observer $observer)
     {
-        $this->logger->debug('Checkout submit action observer called!');
-
         if (!$this->configHelper->isActive()) {
             return;
         }
 
+        $this->logger->debug('Checkout submit action observer is called!');
+
         /** @var Order $order */
         $order = $observer->getEvent()->getData('order');
 
-        if (!$order || !($this->paymentData->getByOrder($order) instanceof PaymentOrderInterface)) {
+        try {
+            $paymentData = $this->paymentData->getByOrder($order);
+        } catch (NoSuchEntityException $e) {
+            $this->logger->debug('SwedbankPay data update is skipped!');
+            return;
+        }
+
+        if (!$order || !($paymentData instanceof PaymentOrderInterface)) {
             return;
         }
 
@@ -114,8 +119,6 @@ class AfterCheckoutSubmitObserver implements ObserverInterface
         if ($payment->getMethod() != ConfigProvider::CODE) {
             return;
         }
-
-        $paymentData = $this->paymentData->getByOrder($order);
 
         /** @var GetCurrentPayment $currentPaymentRequest */
         $currentPaymentRequest = $this->clientService->init('Paymentorder', 'GetCurrentPayment');
