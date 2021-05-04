@@ -2,6 +2,7 @@ define([
     'jquery',
     'ko',
     'SwedbankPay_Checkout/js/action/trigger-shipping-information-validation',
+    'SwedbankPay_Checkout/js/action/shipping-methods-view',
     'SwedbankPay_Checkout/js/action/email-observer',
     'Magento_Checkout/js/model/quote',
     'Magento_Customer/js/model/customer',
@@ -13,18 +14,25 @@ define([
     'rjsResolver',
     'uiRegistry',
     'mage/translate'
-], function ($, ko, triggerShippingInformationValidation, emailObserver, quote, customer, stepNavigator, setShippingInformationAction, getPaymentInformation, selectShippingAddress, createShippingAddress, resolver, registry, $t) {
+], function ($, ko, triggerShippingInformationValidation, shippingMethodsView, emailObserver, quote, customer, stepNavigator, setShippingInformationAction, getPaymentInformation, selectShippingAddress, createShippingAddress, resolver, registry, $t) {
     'use strict';
 
     var shippingMethodVisible = ko.observable(false);
     var isEnabled = window.checkoutConfig.SwedbankPay_Checkout.isEnabled;
+    var isVisible = ko.observable(false);
 
     return function (Shipping) {
         var mixin = {
             shippingMethodVisible: shippingMethodVisible,
+            isVisible: isVisible,
             initialize: function(){
                 var self = this;
                 this._super();
+
+                shippingMethodsView.show = function() {
+                    isVisible(true);
+                    shippingMethodVisible(true);
+                };
 
                 triggerShippingInformationValidation.trigger = function (callback) {
                     callback({success: self.quickShippingInformationValidation(), message: 'validateShippingInformation was ran!'});
@@ -82,30 +90,7 @@ define([
                 });
             },
             quickShippingInformationValidation: function(){
-                var loginFormSelector = 'form[data-role=email-with-possible-login]',
-                    emailValidationResult = customer.isLoggedIn();
-
-                if (!customer.isLoggedIn() && $(loginFormSelector + ' input[name=username]').length > 0) {
-                    $(loginFormSelector).validation();
-                    emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
-                }
-
-                if (this.isFormInline) {
-                    this.source.set('params.invalid', false);
-                    this.triggerShippingDataValidateEvent();
-
-                    if (emailValidationResult && this.source.get('params.invalid')) {
-                        return false;
-                    }
-                }
-
-                if (!emailValidationResult) {
-                    $(loginFormSelector + ' input[name=username]').focus();
-
-                    return false;
-                }
-
-                return true;
+                return isVisible();
             }
         };
 

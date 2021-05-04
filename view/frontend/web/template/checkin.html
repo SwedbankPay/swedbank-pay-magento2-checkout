@@ -7,13 +7,11 @@
             <!-- ko if: !isCheckedIn() -->
                 <!-- ko if: !isRequired() -->
                     <!-- ko if: !isShippingSectionVisible() -->
-                            <button class="swedbank-pay-checkin__skip button" data-bind="i18n: 'Proceed as guest', click: proceedAsGuest"></button>
                     <!-- /ko -->
                 <!-- /ko -->
             <!-- /ko -->
 
             <!-- ko if: isCheckedIn() && !isShippingSectionVisible() -->
-                <button class="swedbank-pay-checkin__skip button" data-bind="i18n: 'Change shipping information', click: proceedAsGuest"></button>
             <!-- /ko -->
         </div>
     </div>

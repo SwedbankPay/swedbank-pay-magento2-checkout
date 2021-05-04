@@ -11,7 +11,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Widget\Block\BlockInterface;
-use SwedbankPay\Api\Service\Consumer\Resource\ConsumerNationalIdentifier;
 use SwedbankPay\Api\Service\Consumer\Resource\Request\InitiateConsumerSession as ConsumerSessionResource;
 use SwedbankPay\Api\Service\Data\RequestInterface;
 use SwedbankPay\Api\Service\Data\ResponseInterface;
@@ -19,8 +18,8 @@ use SwedbankPay\Api\Service\Resource\Data\ResponseInterface as ResponseResourceI
 use SwedbankPay\Checkout\Helper\Config;
 use SwedbankPay\Checkout\Model\ConsumerSession as SwedbankPayConsumerSession;
 use SwedbankPay\Core\Exception\ServiceException;
-use SwedbankPay\Core\Model\Service;
 use SwedbankPay\Core\Logger\Logger;
+use SwedbankPay\Core\Model\Service;
 
 /**
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
@@ -161,29 +160,6 @@ class CheckinWidget extends Template implements BlockInterface
 
         $consumerSessionData = new ConsumerSessionResource();
         $consumerSessionData->setConsumerCountryCode($this->getDefaultCountry());
-
-        if ($this->customerSession->isLoggedIn()) {
-            $customerId = $this->customerSession->getCustomerId();
-            $customer = $this->customerRepository->getById($customerId);
-            $email = $customer->getEmail();
-            try {
-                $billingAddress = $this->addressRepository->getById($customer->getDefaultBilling());
-            } catch (LocalizedException $e) {
-                $this->logger->error($e->getMessage());
-                return false;
-            }
-            $msisdn = $billingAddress->getTelephone();
-            $countryCode = $billingAddress->getCountryId();
-            $this->eventManager->dispatch('swedbank_pay_checkout_before_initiate_consumer_session');
-
-            $nationalIdentifierData = new ConsumerNationalIdentifier();
-            $nationalIdentifierData->setCountryCode($countryCode);
-
-            $consumerSessionData->setMsisdn($msisdn)
-                ->setEmail($email)
-                ->setConsumerCountryCode($countryCode)
-                ->setNationalIdentifier($nationalIdentifierData);
-        }
 
         /** @var ResponseInterface|false $response */
         try {

@@ -12,10 +12,11 @@ define([
     'Magento_Checkout/js/action/set-shipping-information',
     'SwedbankPay_Checkout/js/action/open-shipping-information',
     'SwedbankPay_Checkout/js/action/trigger-shipping-information-validation',
+    'SwedbankPay_Checkout/js/action/shipping-methods-view',
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/checkout-data',
     'mage/cookies'
-], function (Component, $, ko, _, $t, storage, stepNavigator, quote, registry, newCustomerAddress, setShippingInformationAction, openShippingInformation, triggerShippingInformationValidation, addressConverter, checkoutData) {
+], function (Component, $, ko, _, $t, storage, stepNavigator, quote, registry, newCustomerAddress, setShippingInformationAction, openShippingInformation, triggerShippingInformationValidation, shippingMethodsView, addressConverter, checkoutData) {
     'use strict';
 
     var SwedbankPay = window.swedbankPay,
@@ -144,6 +145,7 @@ define([
                 JSON.stringify(data),
                 true
             ).done(function(response){
+                shippingMethodsView.show();
                 onConsumerIdentifiedDelay(true);
                 self.isCheckedIn(true);
             }).fail(function(message){
