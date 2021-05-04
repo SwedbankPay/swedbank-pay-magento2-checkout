@@ -19,13 +19,13 @@ jobs:
       run: git fetch --prune --unshallow
 
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
+      uses: gittools/actions/gitversion/setup@v0.9.9
       with:
         versionSpec: '5.x'
 
     - name: Execute GitVersion
       id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
+      uses: gittools/actions/gitversion/execute@v0.9.9
 
     - name: PHP Setup
       uses: shivammathur/setup-php@v2
@@ -90,7 +90,7 @@ jobs:
         EOF
 
     - name: Cache dependencies
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.5
       with:
         path: ./vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
