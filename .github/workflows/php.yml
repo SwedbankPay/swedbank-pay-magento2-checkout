@@ -28,7 +28,7 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.9
 
     - name: PHP Setup
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@2.11.0
       with:
         php-version: '7.2'
 
