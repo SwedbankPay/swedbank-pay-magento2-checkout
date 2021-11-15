@@ -73,7 +73,7 @@ jobs:
     - name: Validate M2 Package
       run: php ./vendor/validate_m2_package.php -d ${{ steps.archive.outputs.name }}
 
-    - name: Validate composer.json and composer.lock
+    - name: Composer validate
       run: composer validate
 
     - name: Add auth.json
@@ -96,7 +96,7 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: ${{ runner.os }}-php-
 
-    - name: Install dependencies
+    - name: Composer install
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: PHPCS Check

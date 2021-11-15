@@ -1,0 +1,23 @@
+{
+    "name": "swedbank-pay/magento2-checkout-consumer",
+    "description": "Test project consuming Swedbank Pay Magento 2 Checkout",
+    "license": "MIT",
+    "authors": [{
+        "name": "Swedbank Pay",
+        "email": "opensource@swedbankpay.com"
+    }],
+    "minimum-stability": "stable",
+    "require": {
+        "swedbank-pay/magento2-checkout": "dev-master"
+    },
+    "repositories": {
+        "magento": {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        },
+        "swedbank-pay-magento2-checkout": {
+            "type": "path",
+            "url": "/plugin"
+        }
+    }
+}
